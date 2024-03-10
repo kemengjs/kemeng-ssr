@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": false,
+    "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -24,17 +24,14 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@core/*":[
-        "./packages/core/*"
       ]
     }
   },
   "include": [
-    "packages/*",
+    "apps",
     "**/*.ts",
     "**/*.tsx",
     "*.d.ts"
-, "server/utils.js", "server/server.js"  ],
+, "server/*"  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
