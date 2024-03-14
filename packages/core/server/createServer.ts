@@ -28,6 +28,10 @@ export const createServer = async () => {
 		})
 	)
 
+	app.use((ctx,next)=>{
+		
+	})
+
 	router.get('/h5-music-detail', async ctx => {
 		try {
 			const { headers, query } = ctx
@@ -60,11 +64,6 @@ export const createServer = async () => {
 			ctx.status = 500
 			ctx.body = '呀！服务出了点小毛病!'
 		}
-	})
-
-	router.get('/monitor/ping', async ctx => {
-		ctx.body = 'ok'
-		return
 	})
 
 	app.use(router.routes())

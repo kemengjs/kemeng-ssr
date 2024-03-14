@@ -32,6 +32,6 @@
     "**/*.ts",
     "**/*.tsx",
     "*.d.ts"
-, "server/*"  ],
+, "server/*","zan"  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
