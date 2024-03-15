@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import url from 'node:url'
+import { buildConfig } from './zan/plugin'
 
 const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
@@ -14,27 +16,14 @@ export default defineConfig(() => {
 		base: '',
 		resolve: {
 			alias: {
-				'@': baseSource,
-				'@core': resolve('./packages/core')
+				'@': baseSource
 			}
-		},
-		optimizeDeps: {
-			exclude: ['node']
 		},
 		build: {
 			sourcemap: false,
 			assetsInlineLimit: 5 * 1024,
-			target: 'es2015',
-
-			lib: {
-				entry: resolve(`./packages/${packageName}/index.ts`),
-				name: packageName,
-				fileName: format => `${packageName}.${format}.js`,
-				formats: ['es']
-			},
-			rollupOptions: {
-				external: [/node/]
-			}
-		}
+			target: 'es2015'
+		},
+		plugins: [react(), buildConfig()]
 	}
 })
