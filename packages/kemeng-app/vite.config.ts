@@ -16,7 +16,7 @@ export default defineConfig(() => {
 		base: '',
 		resolve: {
 			alias: {
-				'@': baseSource
+				'@': baseSource //基础@请误移除
 			}
 		},
 		build: {

@@ -1,8 +1,8 @@
 import { renderToString } from 'react-dom/server'
-import { Provider } from 'jotai'
+import Main from '../main'
 
 export function render(ssrData: unknown) {
-	return renderToString(<Provider>{/* Main */}</Provider>)
+	return renderToString(<Main>{<div>123</div>}</Main>)
 }
 
 //<Main ssrData={ssrData} />

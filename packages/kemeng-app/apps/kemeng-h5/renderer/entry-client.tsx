@@ -1,22 +1,14 @@
+// 默认使用routerPlaceholder生成对应路由模版 不使用框架提供路由可以移除 自已定义路由
+// 注：路由采用react-router纯静态路由 无任何绑定
 import { hydrateRoot } from 'react-dom/client'
-import { Provider } from 'jotai'
-import { Route, Routes } from 'react-router-dom'
 import Main from '../main'
-import { lazy } from 'react'
-
-const Fuck = lazy(() => import('@/apps/kemeng-h5/pages/Fuck/Fuck.page'))
-const About = lazy(() => import('@/apps/kemeng-h5/pages/About/About.page'))
+import { routerImportPlaceholder, routerPlaceholder } from '@/zan/placeholder'
+routerImportPlaceholder()
 
 hydrateRoot(
 	document.getElementById('app')!,
-	<Provider>
-		<Main>
-			<Routes>
-				<Route path='/' Component={Fuck} />
-				<Route path='/about' Component={About} />
-			</Routes>
-		</Main>
-	</Provider>
+
+	<Main>{routerPlaceholder()}</Main>
 )
 
 // <Main ssrData={safeJsonParse(window.__SSR_DATA__)} />

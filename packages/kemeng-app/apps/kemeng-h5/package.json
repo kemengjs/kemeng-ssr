@@ -1,0 +1,12 @@
+{
+  "name": "kemeng-h5",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite --config ../../vite.config.ts build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
