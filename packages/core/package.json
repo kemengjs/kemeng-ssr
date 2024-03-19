@@ -1,10 +1,14 @@
 {
-  "name": "core",
+  "name": "@kemeng-ssr/core",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/core.es.js",
+  "exports": {
+    "import": "./dist/core.es.js"
+  },
+  
   "scripts": {
-    "dev": "vite --config ../../vite.config.ts build && node ./dist/core.es.js"
+    "dev": "vite --config ../../vite.config.ts build --watch"
   },
   "keywords": [],
   "type": "module",

@@ -1,4 +1,4 @@
-export const logger = console
+import { logger } from './log'
 
 export function safeJsonParse<T>(jsonStr: string, defaultValue = {}) {
 	if (!jsonStr) {

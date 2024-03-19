@@ -1,15 +1,16 @@
 {
-  "name": "kemeng-app",
+  "name": "create-kemeng-app",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite --config ../../vite.config.ts build && node ./dist/create-kemeng-app.es.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@kemeng-ssr/core": "workspace:../core",
     "@types/node": "^20.11.25",
     "@types/react": "^18.2.64",
     "eslint": "^8.57.0",

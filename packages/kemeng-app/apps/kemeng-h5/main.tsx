@@ -2,6 +2,6 @@
 import { Provider } from 'jotai'
 import { ReactNode } from 'react'
 
-export default function Main({ children }: { children: ReactNode }) {
+export default function Main({ children }: { children?: ReactNode }) {
 	return <Provider>{children}</Provider>
 }

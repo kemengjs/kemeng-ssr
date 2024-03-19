@@ -20,6 +20,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "types":["node"],
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -35,6 +36,6 @@
     "**/*.ts",
     "**/*.tsx",
     "*.d.ts"
-, "server/utils.js", "server/server.js"  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+, "server/utils.js", "server/server.js"],
+  // "references": [{ "path": "./tsconfig.node.json" }]
 }

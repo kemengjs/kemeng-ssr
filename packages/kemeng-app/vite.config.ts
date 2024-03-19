@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import url from 'node:url'
-import { buildConfig } from './zan/plugin'
+import { kemengSrrPlugin } from '@kemeng-ssr/core'
 
 const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
@@ -24,6 +24,6 @@ export default defineConfig(() => {
 			assetsInlineLimit: 5 * 1024,
 			target: 'es2015'
 		},
-		plugins: [react(), buildConfig()]
+		plugins: [react(), kemengSrrPlugin()]
 	}
 })

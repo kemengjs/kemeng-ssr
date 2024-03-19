@@ -6,7 +6,10 @@ const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
 )
 const resolve = (p: string) => path.resolve(baseSource, p)
-const packageName = process.env.npm_package_name ?? ''
+
+const packageNameArr = (process.env.npm_package_name || '').split('/')
+const packageName = packageNameArr[packageNameArr.length - 1]
+console.log('process.env', process.cwd())
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -27,13 +30,13 @@ export default defineConfig(() => {
 			target: 'es2015',
 
 			lib: {
-				entry: resolve(`./packages/${packageName}/index.ts`),
+				entry: path.join(process.cwd(), 'index.ts'),
 				name: packageName,
 				fileName: format => `${packageName}.${format}.js`,
 				formats: ['es']
 			},
 			rollupOptions: {
-				external: [/node/]
+				external: [/node/, 'vite']
 			}
 		}
 	}
