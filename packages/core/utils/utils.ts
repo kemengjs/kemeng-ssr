@@ -17,14 +17,20 @@ const appName = process.cwd().substring(process.cwd().lastIndexOf('/') + 1)
 const serverEntryFilePath = curAppResolve('./renderer/entry-server.tsx')
 const clientEntryFilePath = curAppResolve('./renderer/entry-client.tsx')
 
+const serverEntryName = 'entry-server'
+const clientEntryName = 'entry-client'
+
 export {
 	root,
 	__dirname,
 	resolve,
 	workspaceResolve,
+	curAppResolve,
 	workspaceRoot,
 	serverEntryFilePath,
 	clientEntryFilePath,
 	packageName,
-	appName
+	appName,
+	serverEntryName,
+	clientEntryName
 }

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preview": "pnpm run build && node ./server/prod.mjs",
     "build": "vite --config ../../vite.config.ts build"
   },
   "keywords": [],

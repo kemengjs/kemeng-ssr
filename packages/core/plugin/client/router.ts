@@ -3,6 +3,7 @@ import {
 	appName,
 	clientEntryFilePath,
 	packageName,
+	serverEntryFilePath,
 	workspaceResolve
 } from '../../utils/utils'
 
@@ -13,30 +14,63 @@ import {
 } from '../../utils/placeholderName'
 import path from 'node:path'
 
-const getReactRoutesRender = (routesArr: RoutesArr) => {
-	return `/* @__PURE__ */ jsxs(Routes, { children: [
-    /* @__PURE__ */ jsx(Route, { path: "/", Component: lazy(() => import("../App")) }),
-		${routesArr
-			.map(route => {
-				return `/* @__PURE__ */ jsx(Route,{path: "${route.path}",Component: lazy(() => import("${route.componentPath}"))})`
-			})
-			.join('\n,')}
-  ] })`
+const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
+	if (isSsr) {
+		return `<StaticRouter location={'/'}>
+  <Routes>
+  <Route path='/' Component={App} />
+  ${routesArr
+		.map(route => {
+			return `<Route path='${route.path}' Component={${route.name}} />`
+		})
+		.join('\n')}
+</Routes>
+</StaticRouter>
+`
+	}
+
+	return `<BrowserRouter>
+  <Routes>
+  <Route path='/' Component={App} />
+  ${routesArr
+		.map(route => {
+			return `<Route path='${route.path}' Component={${route.name}} />`
+		})
+		.join('\n')}
+</Routes>
+</BrowserRouter>
+`
 }
 
-const getReactRoutesImport = () => {
-	return `import { Route, Routes } from "react-router-dom";\nimport { lazy } from 'react'`
+const getReactRoutesImport = (routesArr: RoutesArr, isSsr = false) => {
+	if (isSsr) {
+		return `import { StaticRouter } from 'react-router-dom/server'
+import { Route, Routes } from 'react-router-dom'
+import App from '../App'\n${routesArr
+			.map(route => {
+				return `import ${route.name} from '${route.componentPath}'`
+			})
+			.join('\n')}`
+	}
+
+	return `import { BrowserRouter, Route, Routes } from 'react-router-dom'
+  import App from '../App'\n${routesArr
+		.map(route => {
+			return `import ${route.name} from '${route.componentPath}'`
+		})
+		.join('\n')}
+  `
 }
 
 const getAppRender = () => {
-	return `/* @__PURE__ */ jsx(App, {})`
+	return `<App />`
 }
 
 const getAppImport = () => {
-	return `import App from "../App"`
+	return `import App from '../App'`
 }
 
-type RoutesArr = { path: string; componentPath: string }[]
+type RoutesArr = { path: string; componentPath: string; name: string }[]
 
 // 获取用于react-router的路由数组对象
 const getAllPagesRoutes = (directoryPath: string) => {
@@ -64,7 +98,8 @@ const getAllPagesRoutes = (directoryPath: string) => {
 
 				routesArr.push({
 					componentPath: filePath,
-					path: `/${urlArr.join('/')}`
+					path: `/${urlArr.join('/')}`,
+					name: urlArr.join('')
 				})
 				// 输出符合条件的文件路径
 			}
@@ -85,7 +120,7 @@ export const getEntryRoutes: () => Plugin[] = () => {
 			transform: {
 				order: 'pre',
 				handler(code, id, options) {
-					if (id === clientEntryFilePath) {
+					if (id === clientEntryFilePath || id === serverEntryFilePath) {
 						if (!packageName) {
 							this.error('检查package.json name字段是否正确')
 						}
@@ -94,6 +129,7 @@ export const getEntryRoutes: () => Plugin[] = () => {
 
 						const routesArr = getAllPagesRoutes(pageDir)
 						console.log('routesArr', routesArr)
+						console.log('options.ssr', options?.ssr)
 
 						let codeTemp = ''
 
@@ -106,11 +142,11 @@ export const getEntryRoutes: () => Plugin[] = () => {
 						} else {
 							codeTemp = code.replace(
 								routerImportPlaceholderName,
-								getReactRoutesImport()
+								getReactRoutesImport(routesArr, options?.ssr)
 							)
 							codeTemp = codeTemp.replace(
 								routerPlaceholderName,
-								getReactRoutesRender(routesArr)
+								getReactRoutesRender(routesArr, options?.ssr)
 							)
 						}
 

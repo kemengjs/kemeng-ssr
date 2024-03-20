@@ -2,12 +2,11 @@
 // 注：路由采用react-router纯静态路由 无任何绑定
 import { hydrateRoot } from 'react-dom/client'
 import Main from '../main'
-// __routerImportPlaceholder__
+/* __routerImportPlaceholder__ */
 
 hydrateRoot(
 	document.getElementById('app')!,
-
-	<Main></Main>
+	<Main>/* __routerPlaceholder__ */</Main>
 )
 
 // <Main ssrData={safeJsonParse(window.__SSR_DATA__)} />

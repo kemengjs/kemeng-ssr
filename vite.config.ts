@@ -21,9 +21,6 @@ export default defineConfig(() => {
 				'@core': resolve('./packages/core')
 			}
 		},
-		optimizeDeps: {
-			exclude: ['node']
-		},
 		build: {
 			sourcemap: false,
 			assetsInlineLimit: 5 * 1024,
@@ -36,7 +33,7 @@ export default defineConfig(() => {
 				formats: ['es']
 			},
 			rollupOptions: {
-				external: [/node/, 'vite']
+				external: [/node/, /node_modules/, 'vite']
 			}
 		}
 	}

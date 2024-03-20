@@ -1,3 +1,1 @@
-import { test } from '@kemeng-ssr/core'
-
-test()
+const b = '123123'
