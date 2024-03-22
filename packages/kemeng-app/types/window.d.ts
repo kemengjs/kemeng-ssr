@@ -1,6 +1,6 @@
 declare global {
 	interface Window {
-		__SSR_DATA__: string
+		__SERVER_DATA__: string
 	}
 }
 

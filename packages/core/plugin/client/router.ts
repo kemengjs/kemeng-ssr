@@ -16,7 +16,7 @@ import path from 'node:path'
 
 const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 	if (isSsr) {
-		return `<StaticRouter location={'/'}>
+		return `<StaticRouter basename='/${appName}' location={_context.path}>
   <Routes>
   <Route path='/' Component={App} />
   ${routesArr
@@ -29,7 +29,7 @@ const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 `
 	}
 
-	return `<BrowserRouter>
+	return `<BrowserRouter basename='/${appName}'>
   <Routes>
   <Route path='/' Component={App} />
   ${routesArr

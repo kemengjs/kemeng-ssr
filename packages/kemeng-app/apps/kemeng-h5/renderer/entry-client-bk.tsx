@@ -5,7 +5,7 @@ import App from '../App'
 import AboutAbout from '../pages/About/About/About.page'
 import About from '../pages/About/About.page'
 import AboutOpp from '../pages/About/Opp.page'
-import Fuck from '../pages/Fuck/Fuck.page'
+import Fuck from '../pages/fuck/fuck.page'
 
 hydrateRoot(
 	document.getElementById('app')!,

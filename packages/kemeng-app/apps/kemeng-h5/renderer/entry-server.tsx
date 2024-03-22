@@ -1,9 +1,14 @@
 import { renderToString } from 'react-dom/server'
-import Main from '../main'
+import Main, { onBeforeRender } from '../main'
 /* __routerImportPlaceholder__ */
 
-export function render(ssrData: unknown) {
-	return renderToString(<Main>/* __routerPlaceholder__ */</Main>)
+export function render(serverData: unknown, _context: any) {
+	return renderToString(
+		<Main serverData={serverData}>/* __routerPlaceholder__ */</Main>
+	)
 }
 
-//<Main ssrData={ssrData} />
+// 服务端数据注入 以灵活为主
+export async function getServerData() {
+	return Promise.all([onBeforeRender()])
+}

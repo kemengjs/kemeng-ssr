@@ -2,15 +2,12 @@
 // 注：路由采用react-router纯静态路由 无任何绑定
 import { hydrateRoot } from 'react-dom/client'
 import Main from '../main'
+import { safeJsonParse } from '@kemeng-ssr/utils'
 /* __routerImportPlaceholder__ */
 
 hydrateRoot(
 	document.getElementById('app')!,
-	<Main>/* __routerPlaceholder__ */</Main>
+	<Main serverData={safeJsonParse(window.__SERVER_DATA__)}>
+		/* __routerPlaceholder__ */
+	</Main>
 )
-
-// <Main ssrData={safeJsonParse(window.__SSR_DATA__)} />
-// import { safeJsonParse } from '../zan/utils'
-
-//import { About } from '@/apps/kemeng-h5/pages/About/About.page'
-//<About />

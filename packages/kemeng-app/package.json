@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@kemeng-ssr/core": "workspace:../core",
+    "@kemeng-ssr/utils": "workspace:../utils",
     "jotai": "^2.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,6 +23,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-react-app": "^7.0.1",

@@ -1,0 +1,17 @@
+{
+  "name": "@kemeng-ssr/utils",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/utils.js",
+  "exports": {
+    "import": "./dist/utils.js"
+  },
+  
+  "scripts": {
+    "dev": "rollup --config ../../rollup.config.js --watch"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC"
+}

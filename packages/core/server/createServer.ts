@@ -2,29 +2,84 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 import koa from 'koa'
 import compress from 'koa-compress'
 import fs from 'node:fs'
-import { curAppResolve } from '../utils/utils'
+import koaConnect from 'koa-connect'
+import dayjs from 'dayjs'
+import { appName, curAppResolve, workspaceResolve } from '../utils/utils'
 import staticServe from 'koa-static'
+import { initRoutesMap, routesMap } from './increase'
 
-console.log('qweqweqwe')
+const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
+	const vite = await (
+		await import('vite')
+	).createServer({
+		root: curAppResolve('./'),
+		server: { middlewareMode: true },
+		appType: 'custom',
+		configFile: workspaceResolve('./vite.config.ts')
+	})
 
-export const createServer = async () => {
-	const asyncLocalStorage = new AsyncLocalStorage()
-	global._asyncLocalStorage = asyncLocalStorage
+	app.use(koaConnect(vite.middlewares))
 
-	const template = fs.readFileSync(
-		curAppResolve('dist/client/index.html'),
-		'utf8'
+	console.log(
+		'root',
+		curAppResolve('./'),
+		'vite',
+		workspaceResolve('./vite.config.ts')
 	)
 
-	console.log('template', template)
+	app.use(async ctx => {
+		try {
+			const { headers, query, originalUrl, path } = ctx
+			const renderContext = {
+				headers,
+				query,
+				cookies: ctx.headers.cookie,
+				path
+			}
 
-	const app = new koa()
-	const entryModule = await import(
-		curAppResolve('./dist/server/entry-server.mjs')
-	)
-	const { render } = entryModule
+			let template = fs.readFileSync(curAppResolve('index.html'), 'utf8')
+			template = await vite.transformIndexHtml(originalUrl, template)
 
-	app.use(compress())
+			const entryModule = await vite.ssrLoadModule(
+				curAppResolve('./renderer/entry-server.tsx')
+			)
+			const { render, getServerData } = entryModule
+
+			global._asyncLocalStorage.run(renderContext, async () => {
+				const curTime = dayjs()
+				console.log('curTime', curTime.format())
+				const serverData = await getServerData(renderContext)
+				const jieTime = dayjs()
+				console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
+
+				const appHtml = render(serverData, renderContext)
+				const html = template
+					.replace(
+						'<!-- SERVER_DATA -->',
+						`<script>window.__SERVER_DATA__=${JSON.stringify(
+							JSON.stringify(serverData)
+						)}</script>`
+					)
+					.replace(`<!--app-html-->`, appHtml)
+
+				// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
+				const xuanTime = dayjs()
+				console.log('渲染结束', xuanTime.format(), xuanTime.diff(jieTime))
+
+				ctx.status = 200
+				ctx.type = 'html'
+				ctx.body = html
+			})
+		} catch (error) {
+			vite.ssrFixStacktrace(error)
+			console.log('error', error)
+		}
+	})
+}
+const handleProdApp = async (
+	app: koa<koa.DefaultState, koa.DefaultContext>
+) => {
+	await initRoutesMap()
 
 	app.use(
 		staticServe(curAppResolve('./dist/client'), {
@@ -33,26 +88,40 @@ export const createServer = async () => {
 		})
 	)
 
-	app.use(async ctx => {
+	app.use(async (ctx, next) => {
 		try {
-			const { headers, query } = ctx
+			const { headers, query, path } = ctx
+			const curApp = path.match(/\/([^/]*)\//)?.[1]
+			const routeItem = routesMap[curApp]
+			const contentType = ctx.request.headers['content-type'] || ''
 
-			const serverData = {
-				headers,
-				query,
-				cookies: ctx.headers.cookie
+			console.log('contentType', contentType)
+
+			if (!contentType.includes('text/html') || !curApp || !routeItem) {
+				await next()
+				return
 			}
 
-			await asyncLocalStorage.run(serverData, async () => {
-				// const ssrData = await handleSsrData(serverData)
-				const ssrData = ''
+			const { template, render, getServerData } = routesMap[curApp]
 
-				const appHtml = render(ssrData)
+			const renderContext = {
+				headers,
+				query,
+				cookies: ctx.headers.cookie,
+				path
+			}
+
+			console.log('path', renderContext.path)
+
+			await global._asyncLocalStorage.run(renderContext, async () => {
+				const serverData = await getServerData(renderContext)
+
+				const appHtml = render(serverData, renderContext)
 				const html = template
 					.replace(
-						'<!-- SSR_DATA -->',
-						`<script>window.__SSR_DATA__=${JSON.stringify(
-							JSON.stringify(ssrData)
+						'<!-- SERVER_DATA -->',
+						`<script>window.__SERVER_DATA__=${JSON.stringify(
+							JSON.stringify(serverData)
 						)}</script>`
 					)
 					.replace(`<!--app-html-->`, appHtml)
@@ -67,40 +136,22 @@ export const createServer = async () => {
 			ctx.body = '呀！服务出了点小毛病!'
 		}
 	})
+}
 
-	// router.get('/h5-music-detail', async ctx => {
-	// 	try {
-	// 		const { headers, query } = ctx
+export const createServer = async () => {
+	const asyncLocalStorage = new AsyncLocalStorage()
+	global._asyncLocalStorage = asyncLocalStorage
+	const isProduction = process.env.NODE_ENV === 'production'
+	const app = new koa()
 
-	// 		const serverData = {
-	// 			headers,
-	// 			query,
-	// 			cookies: ctx.headers.cookie
-	// 		}
+	app.use(compress())
 
-	// 		await asyncLocalStorage.run(serverData, async () => {
-	// 			const ssrData = await handleSsrData(serverData)
+	if (isProduction) {
+		await handleProdApp(app)
+	} else {
+		await handleDevApp(app)
+	}
 
-	// 			const appHtml = render(ssrData)
-	// 			const html = template
-	// 				.replace(
-	// 					'<!-- SSR_DATA -->',
-	// 					`<script>window.__SSR_DATA__=${JSON.stringify(
-	// 						JSON.stringify(ssrData)
-	// 					)}</script>`
-	// 				)
-	// 				.replace(`<!--app-html-->`, appHtml)
-
-	// 			ctx.status = 200
-	// 			ctx.type = 'html'
-	// 			ctx.body = html
-	// 		})
-	// 	} catch (error) {
-	// 		console.log(error)
-	// 		ctx.status = 500
-	// 		ctx.body = '呀！服务出了点小毛病!'
-	// 	}
-	// })
 	app.listen(3000, () => {
 		console.log('http://localhost:3000')
 	})
