@@ -3,16 +3,22 @@ import { getClientConfig } from './client/config'
 import { getEntryRoutes } from './client/router'
 import { getClientChunk } from './client/chunk'
 import { serverStart } from './server/build'
+import { getClientAssets } from './client/assets'
+import { getFileChange } from './server/fileChange'
 
-export type kemengSrrPluginOption = {}
+export type kemengSrrPluginOption = {
+	isServeAssets: boolean
+}
 
 export const kemengSrrPlugin: (
 	option?: kemengSrrPluginOption
-) => Plugin[] = () => {
+) => Plugin[] = (option: { isServeAssets: true }) => {
 	return [
 		...getClientConfig(),
 		...getEntryRoutes(),
-		...getClientChunk(),
-		serverStart()
+		...getClientChunk(option),
+		...getClientAssets(option),
+		serverStart(),
+		...getFileChange()
 	]
 }

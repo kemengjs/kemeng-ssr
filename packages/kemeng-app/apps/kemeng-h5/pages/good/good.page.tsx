@@ -1,3 +1,3 @@
 export default function Good() {
-	return <div>goooaszxczxcdasdd</div>
+	return <div>goooaszxcz1xxxxcdasdd</div>
 }

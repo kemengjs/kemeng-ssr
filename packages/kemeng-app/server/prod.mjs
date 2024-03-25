@@ -1,3 +1,3 @@
 import { createServer } from '@kemeng-ssr/core'
 
-createServer()
+createServer({ isServeAssets: true })

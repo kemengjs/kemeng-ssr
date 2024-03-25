@@ -4,7 +4,7 @@ import compress from 'koa-compress'
 import fs from 'node:fs'
 import koaConnect from 'koa-connect'
 import dayjs from 'dayjs'
-import { appName, curAppResolve, workspaceResolve } from '../utils/utils'
+import { curAppResolve, workspaceResolve } from '../utils/utils'
 import staticServe from 'koa-static'
 import { initRoutesMap, routesMap } from './increase'
 
@@ -20,21 +20,14 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 
 	app.use(koaConnect(vite.middlewares))
 
-	console.log(
-		'root',
-		curAppResolve('./'),
-		'vite',
-		workspaceResolve('./vite.config.ts')
-	)
-
 	app.use(async ctx => {
 		try {
-			const { headers, query, originalUrl, path } = ctx
+			const { headers, query, originalUrl } = ctx
 			const renderContext = {
 				headers,
 				query,
 				cookies: ctx.headers.cookie,
-				path
+				path: ctx.originalUrl.match(/[^?]+/)[0]
 			}
 
 			let template = fs.readFileSync(curAppResolve('index.html'), 'utf8')
@@ -77,27 +70,28 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 	})
 }
 const handleProdApp = async (
-	app: koa<koa.DefaultState, koa.DefaultContext>
+	app: koa<koa.DefaultState, koa.DefaultContext>,
+	options: CreateServerOptions
 ) => {
 	await initRoutesMap()
 
-	app.use(
-		staticServe(curAppResolve('./dist/client'), {
-			defer: false,
-			index: 'koaIndex.html'
-		})
-	)
+	if (options.isServeAssets) {
+		app.use(
+			staticServe(workspaceResolve('./server/public'), {
+				defer: false,
+				index: 'koaIndex.html'
+			})
+		)
+	}
 
 	app.use(async (ctx, next) => {
 		try {
-			const { headers, query, path } = ctx
-			const curApp = path.match(/\/([^/]*)\//)?.[1]
+			const { headers, query, originalUrl } = ctx
+			const curApp = originalUrl.match(/\/([^/]*)\//)?.[1]
 			const routeItem = routesMap[curApp]
-			const contentType = ctx.request.headers['content-type'] || ''
+			const accept = ctx.request.headers.accept || ''
 
-			console.log('contentType', contentType)
-
-			if (!contentType.includes('text/html') || !curApp || !routeItem) {
+			if (!accept.includes('text/html') || !curApp || !routeItem) {
 				await next()
 				return
 			}
@@ -108,7 +102,7 @@ const handleProdApp = async (
 				headers,
 				query,
 				cookies: ctx.headers.cookie,
-				path
+				path: originalUrl.match(/[^?]+/)[0]
 			}
 
 			console.log('path', renderContext.path)
@@ -138,7 +132,13 @@ const handleProdApp = async (
 	})
 }
 
-export const createServer = async () => {
+export type CreateServerOptions = {
+	isServeAssets: boolean // 是否提供静态资源服务 如果有自己的静态服务可以关闭
+}
+
+export const createServer = async (
+	options: CreateServerOptions = { isServeAssets: true }
+) => {
 	const asyncLocalStorage = new AsyncLocalStorage()
 	global._asyncLocalStorage = asyncLocalStorage
 	const isProduction = process.env.NODE_ENV === 'production'
@@ -147,7 +147,7 @@ export const createServer = async () => {
 	app.use(compress())
 
 	if (isProduction) {
-		await handleProdApp(app)
+		await handleProdApp(app, options)
 	} else {
 		await handleDevApp(app)
 	}

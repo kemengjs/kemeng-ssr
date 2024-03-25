@@ -13,6 +13,7 @@ import {
 	routerPlaceholderName
 } from '../../utils/placeholderName'
 import path from 'node:path'
+import { pageTsxEnd } from '../../utils/plugin'
 
 const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 	if (isSsr) {
@@ -111,7 +112,6 @@ const getAllPagesRoutes = (directoryPath: string) => {
 }
 
 const pagesSubstring = `apps/${appName}/pages/`
-const pageTsxEnd = '.page.tsx'
 
 export const getEntryRoutes: () => Plugin[] = () => {
 	return [

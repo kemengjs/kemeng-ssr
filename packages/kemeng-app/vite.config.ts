@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import url from 'node:url'
-import { kemengSrrPlugin } from '@kemeng-ssr/core'
+import { appName, kemengSrrPlugin } from '@kemeng-ssr/core'
 
 const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
@@ -13,7 +13,7 @@ const packageName = process.env.npm_package_name ?? ''
 // https://vitejs.dev/config/
 export default defineConfig(() => {
 	return {
-		base: '',
+		base: `/${appName}/`,
 		resolve: {
 			alias: {
 				'@': baseSource //基础@请误移除
@@ -24,6 +24,11 @@ export default defineConfig(() => {
 			assetsInlineLimit: 5 * 1024,
 			target: 'es2015'
 		},
-		plugins: [react(), kemengSrrPlugin()]
+		plugins: [
+			react(),
+			kemengSrrPlugin({
+				isServeAssets: true
+			})
+		]
 	}
 })
