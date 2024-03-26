@@ -21,7 +21,7 @@ export default defineConfig({
 
 	output: {
 		file: `dist/${packageName}.js`,
-		format: 'es'
+		format: 'esm'
 	},
 	plugins: [
 		nodeResolve(),

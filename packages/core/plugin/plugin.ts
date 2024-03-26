@@ -5,6 +5,7 @@ import { getClientChunk } from './client/chunk'
 import { serverStart } from './server/build'
 import { getClientAssets } from './client/assets'
 import { getFileChange } from './server/fileChange'
+import { getServerData } from './server/serverData'
 
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
@@ -19,6 +20,7 @@ export const kemengSrrPlugin: (
 		...getClientChunk(option),
 		...getClientAssets(option),
 		serverStart(),
-		...getFileChange()
+		...getFileChange(),
+		...getServerData(option)
 	]
 }

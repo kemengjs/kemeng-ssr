@@ -5,7 +5,6 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true,
-    "types":["node"]
+    "allowSyntheticDefaultImports": true
   }
 }
