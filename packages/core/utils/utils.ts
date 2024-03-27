@@ -18,6 +18,8 @@ const serverEntryFilePath = curAppResolve('./renderer/entry-server.tsx')
 const clientEntryFilePath = curAppResolve('./renderer/entry-client.tsx')
 const mainFilePath = curAppResolve('./main.tsx')
 const appFilePath = curAppResolve('./App.tsx')
+const mainServerFilePath = curAppResolve('./main.server.ts')
+const appServerFilePath = curAppResolve('./App.server.ts')
 
 const serverEntryName = 'entry-server'
 const clientEntryName = 'entry-client'
@@ -36,5 +38,7 @@ export {
 	serverEntryName,
 	clientEntryName,
 	mainFilePath,
-	appFilePath
+	appFilePath,
+	mainServerFilePath,
+	appServerFilePath
 }

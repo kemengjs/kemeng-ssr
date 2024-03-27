@@ -7,13 +7,11 @@ import {
 	workspaceResolve
 } from '../../utils/utils'
 
-import fs from 'node:fs'
 import {
 	routerImportPlaceholderName,
 	routerPlaceholderName
 } from '../../utils/placeholderName'
-import path from 'node:path'
-import { getUrlItem, pageTsxEnd } from '../../utils/plugin'
+import { RoutesArr, getAllPagesRoutes, pageTsxEnd } from '../../utils/plugin'
 
 const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 	if (isSsr) {
@@ -71,36 +69,6 @@ const getAppImport = () => {
 	return `import App from '../App'`
 }
 
-type RoutesArr = { path: string; componentPath: string; name: string }[]
-
-// 获取用于react-router的路由数组对象
-const getAllPagesRoutes = (directoryPath: string) => {
-	let routesArr: RoutesArr = []
-
-	const getPages = (dir: string) => {
-		const files = fs.readdirSync(dir)
-
-		console.log('files', files)
-
-		files.forEach(file => {
-			const filePath = path.join(dir, file)
-			const stats = fs.statSync(filePath)
-
-			if (stats.isDirectory()) {
-				getPages(filePath) // 如果是目录，则递归读取
-			} else if (file.endsWith(pageTsxEnd)) {
-				const urlObj = getUrlItem(filePath)
-
-				routesArr.push(urlObj)
-				// 输出符合条件的文件路径
-			}
-		})
-	}
-
-	getPages(directoryPath)
-	return routesArr
-}
-
 export const getEntryRoutes: () => Plugin[] = () => {
 	return [
 		{
@@ -115,7 +83,7 @@ export const getEntryRoutes: () => Plugin[] = () => {
 
 						const pageDir = workspaceResolve(`./apps/${appName}/pages`)
 
-						const routesArr = getAllPagesRoutes(pageDir)
+						const { routesArr } = getAllPagesRoutes(pageDir, pageTsxEnd)
 						console.log('routesArr', routesArr)
 						console.log('options.ssr', options?.ssr)
 

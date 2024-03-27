@@ -87,9 +87,11 @@ const handleProdApp = async (
 	app.use(async (ctx, next) => {
 		try {
 			const { headers, query, originalUrl } = ctx
-			const curApp = originalUrl.match(/\/([^/]*)\//)?.[1]
+			const curApp = originalUrl.match(/\/([^/]*)\/?/)?.[1]
 			const routeItem = routesMap[curApp]
 			const accept = ctx.request.headers.accept || ''
+
+			console.log('curApp', curApp, routeItem)
 
 			if (!accept.includes('text/html') || !curApp || !routeItem) {
 				await next()

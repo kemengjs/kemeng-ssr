@@ -12,5 +12,7 @@ export function render(serverData: unknown, _context: any) {
 
 // 服务端数据注入 以灵活为主
 export function getServerData(_context: any) {
-	return virtualServerData[_context.path] || Promise.resolve({})
+	const func = virtualServerData[_context.path]
+
+	return func ? virtualServerData[_context.path](_context) : Promise.resolve({})
 }

@@ -1,65 +1,60 @@
 import { Plugin } from 'vite'
 import { kemengSrrPluginOption } from '../plugin'
 import {
+	RoutesItem,
+	getAllPagesRoutes,
 	getServerDataName,
-	getUrlItem,
 	pageTsxEnd,
+	serverDataTsEnd,
 	serverDataVirtualName
 } from '../../utils/plugin'
 import { readFile } from 'node:fs/promises'
-import { appFilePath, curAppResolve, mainFilePath } from '../../utils/utils'
+import {
+	appFilePath,
+	appName,
+	appServerFilePath,
+	mainServerFilePath,
+	workspaceResolve
+} from '../../utils/utils'
 
 const getVirtualServerDataRender = (
-	pagesContents: string[],
-	pagesIds: string[],
-	isHasMainGetServerData: boolean,
-	isHasAppGetServerData: boolean
+	pagesServerDataInfo: (RoutesItem & {
+		isHasServerData: boolean
+		serverPath: string
+	})[],
+	isHasMainGetServerData: boolean
 ) => {
-	const pagesServerDataInfo = pagesContents.map((pagesContent, index) => {
-		const isHasServerData = pagesContent.includes(getServerDataName)
-		const urlItem = getUrlItem(pagesIds[index])
-
-		return {
-			isHasServerData,
-			...urlItem
-		}
-	})
-
-	// 加入app 首页
-	pagesServerDataInfo.unshift({
-		componentPath: appFilePath,
-		name: 'app',
-		path: '/',
-		isHasServerData: isHasAppGetServerData
-	})
-
-	const pagesImportRender = pagesServerDataInfo
+	const serverPagesImportRender = pagesServerDataInfo
 		.filter(item => {
 			return item.isHasServerData
 		})
 		.map(item => {
-			return `import { ${getServerDataName} as ${item.name} } from '${item.componentPath}'`
+			return `import { ${getServerDataName} as ${item.name} } from '${item.serverPath}'`
 		})
 		.join('\n')
 
-	const pagesServerDataRender = pagesServerDataInfo
+	const serverPagesServerDataRender = pagesServerDataInfo
 		.map(item => {
-			return `'${item.path}' : ${isHasMainGetServerData && item.isHasServerData ? `Promise.all([${getServerDataName}(),${item.name}()])` : isHasMainGetServerData && !item.isHasServerData ? getServerDataName : !isHasMainGetServerData && item.isHasServerData ? item.name : ''}`
+			const funcRender =
+				isHasMainGetServerData && item.isHasServerData
+					? `((context) => Promise.all([${getServerDataName}(context),${item.name}(context)]))`
+					: isHasMainGetServerData && !item.isHasServerData
+						? getServerDataName
+						: !isHasMainGetServerData && item.isHasServerData
+							? item.name
+							: ''
+
+			return `'${item.path}' :${funcRender},\n'${item.path}/' :${funcRender}`
 		})
 		.join(',\n')
 
-	return `${isHasMainGetServerData ? `import { ${getServerDataName} } from '${mainFilePath}'\n` : ''}${pagesImportRender}
-  \n\nexport const virtualServerData = {${pagesServerDataRender}}`
+	return `${isHasMainGetServerData ? `import { ${getServerDataName} } from '${mainServerFilePath}'\n` : ''}${serverPagesImportRender}
+  \n\nexport const virtualServerData = {${serverPagesServerDataRender}}`
 }
 
 export const getServerData: (
 	option: kemengSrrPluginOption
 ) => Plugin[] = () => {
-	let pagesContentPromises: Promise<string>[] = []
-	let pagesIds: string[] = []
-	let mainContentPromise: Promise<string> = undefined
-	let appContentPromise: Promise<string> = undefined
-
 	const resolvedVirtualModuleId = '\0' + serverDataVirtualName
 
 	return [
@@ -73,10 +68,6 @@ export const getServerData: (
 							moduleSideEffects: true
 						}
 					}
-					if (options?.ssr && id.endsWith(pageTsxEnd)) {
-						console.log('i resolve ', id)
-						return null
-					}
 					return null
 				}
 			},
@@ -87,28 +78,6 @@ export const getServerData: (
 						return ''
 					}
 
-					if (
-						options?.ssr &&
-						(id.endsWith(pageTsxEnd) ||
-							id === mainFilePath ||
-							id === appFilePath)
-					) {
-						const res = readFile(id, 'utf8')
-
-						if (id === mainFilePath) {
-							mainContentPromise = res
-							return null
-						}
-
-						if (id === appFilePath) {
-							appContentPromise = res
-							return null
-						}
-
-						pagesContentPromises.push(res)
-						pagesIds.push(id)
-						return null
-					}
 					return null
 				}
 			},
@@ -117,26 +86,64 @@ export const getServerData: (
 				order: 'pre',
 				async handler(_, id, options) {
 					if (options?.ssr && id === resolvedVirtualModuleId) {
-						const [mainContent, appContent, ...pagesContents] =
+						const pageDir = workspaceResolve(`./apps/${appName}/pages`)
+
+						const { routesMap: serverRoutesMap } = getAllPagesRoutes(
+							pageDir,
+							serverDataTsEnd
+						)
+						const { routesArr: pagesRoutesArr } = getAllPagesRoutes(
+							pageDir,
+							pageTsxEnd
+						)
+
+						const serverFilePromises = pagesRoutesArr.map(item => {
+							const serverRoutesItem = serverRoutesMap[item.name]
+
+							return serverRoutesItem
+								? readFile(serverRoutesItem.componentPath, 'utf8')
+								: Promise.resolve('')
+						})
+
+						const mainContentPromise = readFile(mainServerFilePath, 'utf8')
+						const appContentPromise = readFile(appServerFilePath, 'utf8')
+
+						const [mainContent, appContent, ...serverContents] =
 							await Promise.all([
 								mainContentPromise,
 								appContentPromise,
-								...pagesContentPromises
+								...serverFilePromises
 							])
-
-						console.log(
-							'onBeforeRenderFunctions',
-							mainContent,
-							appContent,
-							pagesContents
-						)
 
 						const isHasMainGetServerData =
 							mainContent.includes(getServerDataName)
 
 						const isHasAppGetServerData = appContent.includes(getServerDataName)
 
-						const code = `${getVirtualServerDataRender(pagesContents, pagesIds, isHasMainGetServerData, isHasAppGetServerData)}`
+						const pagesServerDataInfo = pagesRoutesArr.map(
+							(pagesRoute, index) => {
+								const isHasServerData =
+									serverContents[index].includes(getServerDataName)
+
+								return {
+									isHasServerData,
+									...pagesRoute,
+									path: `/${appName}${pagesRoute.path}`,
+									serverPath: serverRoutesMap[pagesRoute.name]?.componentPath
+								}
+							}
+						)
+
+						// 加入app 首页
+						pagesServerDataInfo.unshift({
+							componentPath: appFilePath,
+							name: 'app',
+							path: `/${appName}`,
+							isHasServerData: isHasAppGetServerData,
+							serverPath: appServerFilePath
+						})
+
+						const code = `${getVirtualServerDataRender(pagesServerDataInfo, isHasMainGetServerData)}`
 
 						console.log('zxc', code)
 

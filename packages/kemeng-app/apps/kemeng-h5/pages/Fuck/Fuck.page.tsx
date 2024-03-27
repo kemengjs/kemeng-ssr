@@ -1,11 +1,5 @@
 import { Counter } from './Counter'
 
-export function onBeforeRender() {
-	return {
-		fuck: 'zxczxcasdasdzxczxczxczxc'
-	}
-}
-
 export default function Fuck() {
 	return (
 		<>

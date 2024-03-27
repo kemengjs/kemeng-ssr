@@ -2,13 +2,6 @@
 import { Provider } from 'jotai'
 import { ReactNode } from 'react'
 
-export async function onBeforeRender() {
-	return {
-		main: '666',
-		zxczxc: 'zxcxcasd'
-	}
-}
-
 export default function Main({
 	children,
 	serverData = {}
