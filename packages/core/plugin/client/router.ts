@@ -13,7 +13,7 @@ import {
 	routerPlaceholderName
 } from '../../utils/placeholderName'
 import path from 'node:path'
-import { pageTsxEnd } from '../../utils/plugin'
+import { getUrlItem, pageTsxEnd } from '../../utils/plugin'
 
 const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 	if (isSsr) {
@@ -89,19 +89,9 @@ const getAllPagesRoutes = (directoryPath: string) => {
 			if (stats.isDirectory()) {
 				getPages(filePath) // 如果是目录，则递归读取
 			} else if (file.endsWith(pageTsxEnd)) {
-				const lastPagesIndex = filePath.lastIndexOf(pagesSubstring)
-				const urlArr = filePath
-					.substring(lastPagesIndex + pagesSubstring.length)
-					.split('/')
-				const urlArrLastOne = urlArr.pop()?.replace(pageTsxEnd, '') || ''
-				urlArrLastOne !== urlArr[urlArr.length - 1] &&
-					urlArr.push(urlArrLastOne)
+				const urlObj = getUrlItem(filePath)
 
-				routesArr.push({
-					componentPath: filePath,
-					path: `/${urlArr.join('/')}`,
-					name: urlArr.join('')
-				})
+				routesArr.push(urlObj)
 				// 输出符合条件的文件路径
 			}
 		})
@@ -110,8 +100,6 @@ const getAllPagesRoutes = (directoryPath: string) => {
 	getPages(directoryPath)
 	return routesArr
 }
-
-const pagesSubstring = `apps/${appName}/pages/`
 
 export const getEntryRoutes: () => Plugin[] = () => {
 	return [

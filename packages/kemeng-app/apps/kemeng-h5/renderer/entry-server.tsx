@@ -11,10 +11,6 @@ export function render(serverData: unknown, _context: any) {
 }
 
 // 服务端数据注入 以灵活为主
-export async function getServerData(_context: any) {
-	return await virtualServerData(_context)
-}
-
-export const serverDataObj = {
-	id: Promise.all([])
+export function getServerData(_context: any) {
+	return virtualServerData[_context.path] || Promise.resolve({})
 }
