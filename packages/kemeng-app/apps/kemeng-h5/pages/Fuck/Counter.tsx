@@ -6,7 +6,7 @@ function Counter() {
 	const [count, setCount] = useState(0)
 	return (
 		<button type='button' onClick={() => setCount(count => count + 1)}>
-			CounterZZZZas1d 726xxx6cc6 {count}
+			Counterzxcxzc112312ZZZZas1ds 726xxx6cc6 {count}
 		</button>
 	)
 }

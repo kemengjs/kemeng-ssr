@@ -5,7 +5,7 @@ export default function About() {
 		<div>
 			<h1>About</h1>
 			<p>
-				Example of using <code>vite-plugin-ssr</code>.
+				Example of ssusing <code>vite-plugin-ssr</code>.
 			</p>
 		</div>
 	)

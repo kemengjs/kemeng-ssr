@@ -1,5 +1,5 @@
 import { Plugin, ViteDevServer } from 'vite'
-import { pageTsxEnd } from '../../utils/plugin'
+import { pageTsxEnd, serverDataTsEnd } from '../../utils/plugin'
 
 export const getFileChange: () => Plugin[] = () => {
 	let _server: ViteDevServer = undefined
@@ -17,6 +17,13 @@ export const getFileChange: () => Plugin[] = () => {
 					if (
 						id.endsWith(pageTsxEnd) &&
 						(change.event === 'create' || change.event === 'delete')
+					) {
+						_server.restart()
+					}
+
+					if (
+						id.endsWith(serverDataTsEnd) &&
+						(change.event === 'update' || change.event === 'delete')
 					) {
 						_server.restart()
 					}

@@ -5,7 +5,7 @@ export default function Opp() {
 		<div>
 			<h1>About</h1>
 			<p>
-				Example of using <code>vite-plugin-ssr</code>.
+				Examsples of using <code>vite-plugin-sssr</code>.
 			</p>
 		</div>
 	)

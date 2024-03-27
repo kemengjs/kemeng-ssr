@@ -1,5 +1,5 @@
 export function onBeforeRender() {
 	return {
-		fuck: 'zxc'
+		fuck: 'zvvv'
 	}
 }
