@@ -128,7 +128,7 @@ export const getServerData: (
 								return {
 									isHasServerData,
 									...pagesRoute,
-									path: `/${appName}${pagesRoute.path}`,
+									path: `/${appName}${pagesRoute.path}`.toLowerCase(),
 									serverPath: serverRoutesMap[pagesRoute.name]?.componentPath
 								}
 							}
@@ -138,7 +138,7 @@ export const getServerData: (
 						pagesServerDataInfo.unshift({
 							componentPath: appFilePath,
 							name: 'app',
-							path: `/${appName}`,
+							path: `/${appName}`.toLowerCase(),
 							isHasServerData: isHasAppGetServerData,
 							serverPath: appServerFilePath
 						})

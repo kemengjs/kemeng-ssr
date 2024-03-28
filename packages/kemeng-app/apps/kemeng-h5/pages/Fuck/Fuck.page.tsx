@@ -8,7 +8,7 @@ export default function Fuck() {
 			<ul>
 				<li>Renderssddded zxcxto HTMsssasdL.</li>
 				<li>
-					Interactive. <Counter />
+					Interactisveee. <Counter />
 				</li>
 			</ul>
 		</>
