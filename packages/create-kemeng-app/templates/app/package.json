@@ -1,0 +1,15 @@
+{
+  "name": "kemeng-h5",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ../../server/prod.mjs",
+    "server:prod": "cross-env NODE_ENV=production node ../../server/prod.mjs",
+    "preview": "pnpm run build && pnpm run server:prod",
+    "build": "vite --config ../../vite.config.ts build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

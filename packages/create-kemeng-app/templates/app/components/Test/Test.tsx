@@ -1,3 +1,3 @@
 export default function Test() {
-	return <div>zxzx</div>
+	return <div>test</div>
 }
