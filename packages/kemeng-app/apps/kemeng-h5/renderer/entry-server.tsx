@@ -4,10 +4,8 @@ import Main from '../main'
 
 import { virtualServerData } from 'virtual:serverData'
 
-export function render(serverData: unknown, _context: any) {
-	return renderToString(
-		<Main serverData={serverData}>/* __routerPlaceholder__ */</Main>
-	)
+export function render(_context: any) {
+	return renderToString(<Main>/* __routerPlaceholder__ */</Main>)
 }
 
 // 服务端数据注入 以灵活为主

@@ -38,31 +38,34 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 			)
 			const { render, getServerData } = entryModule
 
-			global._asyncLocalStorage.run(renderContext, async () => {
-				const curTime = dayjs()
-				console.log('curTime', curTime.format())
-				const serverData = await getServerData(renderContext)
-				const jieTime = dayjs()
-				console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
+			const curTime = dayjs()
+			console.log('curTime', curTime.format())
+			const serverData = await getServerData(renderContext)
+			const jieTime = dayjs()
+			console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
 
-				const appHtml = render(serverData, renderContext)
-				const html = template
-					.replace(
-						'<!-- SERVER_DATA -->',
-						`<script>window.__SERVER_DATA__=${JSON.stringify(
-							JSON.stringify(serverData)
-						)}</script>`
-					)
-					.replace(`<!--app-html-->`, appHtml)
+			global._asyncLocalStorage.run(
+				{ context: renderContext, serverData },
+				async () => {
+					const appHtml = render(renderContext)
+					const html = template
+						.replace(
+							'<!-- SERVER_DATA -->',
+							`<script>window.__SERVER_DATA__=${JSON.stringify(
+								JSON.stringify(serverData)
+							)}</script>`
+						)
+						.replace(`<!--app-html-->`, appHtml)
 
-				// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
-				const xuanTime = dayjs()
-				console.log('渲染结束', xuanTime.format(), xuanTime.diff(jieTime))
+					// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
+					const xuanTime = dayjs()
+					console.log('渲染结束', xuanTime.format(), xuanTime.diff(jieTime))
 
-				ctx.status = 200
-				ctx.type = 'html'
-				ctx.body = html
-			})
+					ctx.status = 200
+					ctx.type = 'html'
+					ctx.body = html
+				}
+			)
 		} catch (error) {
 			vite.ssrFixStacktrace(error)
 			console.log('error', error)
@@ -112,25 +115,26 @@ const handleProdApp = async (
 				path: originalUrl.match(/[^?]+/)[0]
 			}
 
-			console.log('path', renderContext.path)
+			const serverData = await getServerData(renderContext)
 
-			await global._asyncLocalStorage.run(renderContext, async () => {
-				const serverData = await getServerData(renderContext)
+			await global._asyncLocalStorage.run(
+				{ context: renderContext, serverData },
+				async () => {
+					const appHtml = render(renderContext)
+					const html = template
+						.replace(
+							'<!-- SERVER_DATA -->',
+							`<script>window.__SERVER_DATA__=${JSON.stringify(
+								JSON.stringify(serverData)
+							)}</script>`
+						)
+						.replace(`<!--app-html-->`, appHtml)
 
-				const appHtml = render(serverData, renderContext)
-				const html = template
-					.replace(
-						'<!-- SERVER_DATA -->',
-						`<script>window.__SERVER_DATA__=${JSON.stringify(
-							JSON.stringify(serverData)
-						)}</script>`
-					)
-					.replace(`<!--app-html-->`, appHtml)
-
-				ctx.status = 200
-				ctx.type = 'html'
-				ctx.body = html
-			})
+					ctx.status = 200
+					ctx.type = 'html'
+					ctx.body = html
+				}
+			)
 		} catch (error) {
 			console.log(error)
 			ctx.status = 500
