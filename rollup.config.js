@@ -19,10 +19,16 @@ export default defineConfig({
 	input: path.join(process.cwd(), 'index.ts'),
 	external: [/node_modules/],
 
-	output: {
-		file: `dist/${packageName}.js`,
-		format: 'esm'
-	},
+	output: [
+		{
+			file: `dist/${packageName}.mjs`,
+			format: 'esm'
+		},
+		{
+			file: `dist/${packageName}.cjs`,
+			format: 'cjs'
+		}
+	],
 	plugins: [
 		nodeResolve(),
 		typescript({

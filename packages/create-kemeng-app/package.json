@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite --config ../../vite.config.ts build && node ./dist/create-kemeng-app.es.js"
+    "dev": "rollup --config ../../rollup.config.js --watch",
+    "go": "node ./dist/create-kemeng-app.mjs"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +22,9 @@
     "sass": "^1.71.1",
     "typescript": "^5.4.2",
     "vite": "^5.1.5"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^4.3.0",
+    "mustache": "^4.2.0"
   }
 }

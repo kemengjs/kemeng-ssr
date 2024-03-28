@@ -2,9 +2,10 @@
   "name": "@kemeng-ssr/core",
   "version": "0.0.1",
   "description": "",
-  "main": "./dist/core.js",
+  "main": "./dist/core.mjs",
   "exports": {
-    "import": "./dist/core.js"
+    "import": "./dist/core.mjs",
+    "require": "./dist/core.cjs"
   },
   "scripts": {
     "dev": "rollup --config ../../rollup.config.js --watch"

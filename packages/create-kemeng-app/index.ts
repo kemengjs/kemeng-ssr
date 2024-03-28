@@ -1,1 +1,1 @@
-const b = '123123'
+export { createApp } from './inquirers/create'
