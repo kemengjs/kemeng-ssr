@@ -75,6 +75,11 @@ const handleProdApp = async (
 ) => {
 	await initRoutesMap()
 
+	const errorHtml = fs.readFileSync(
+		workspaceResolve(`./server/error.html`),
+		'utf8'
+	)
+
 	if (options.isServeAssets) {
 		app.use(
 			staticServe(workspaceResolve('./server/public'), {
@@ -129,7 +134,7 @@ const handleProdApp = async (
 		} catch (error) {
 			console.log(error)
 			ctx.status = 500
-			ctx.body = '呀！服务出了点小毛病!'
+			ctx.body = errorHtml
 		}
 	})
 }

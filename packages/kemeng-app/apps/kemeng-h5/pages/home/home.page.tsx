@@ -1,6 +1,6 @@
 import { Counter } from './Counter'
 
-export default function Fuck() {
+export default function Home() {
 	return (
 		<>
 			<h1>We1lcome</h1>
