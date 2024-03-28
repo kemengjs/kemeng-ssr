@@ -1,5 +1,9 @@
 import { Plugin, ViteDevServer } from 'vite'
-import { pageTsxEnd, serverDataTsEnd } from '../../utils/plugin'
+import {
+	getServerDataName,
+	pageTsxEnd,
+	serverDataTsEnd
+} from '../../utils/plugin'
 
 export const getFileChange: () => Plugin[] = () => {
 	let _server: ViteDevServer = undefined
@@ -21,11 +25,25 @@ export const getFileChange: () => Plugin[] = () => {
 						_server.restart()
 					}
 
-					if (
-						id.endsWith(serverDataTsEnd) &&
-						(change.event === 'update' || change.event === 'delete')
-					) {
+					if (id.endsWith(serverDataTsEnd) && change.event === 'delete') {
 						_server.restart()
+					}
+				}
+			},
+			handleHotUpdate: {
+				async handler({ file, read, modules, server }) {
+					if (file.endsWith(serverDataTsEnd)) {
+						const content = await read()
+
+						if (modules.length > 0 && !content.includes(getServerDataName)) {
+							server.restart()
+							return []
+						}
+
+						if (modules.length === 0 && content.includes(getServerDataName)) {
+							server.restart()
+							return []
+						}
 					}
 				}
 			}
