@@ -122,7 +122,7 @@ importers:
       '@kemengjs/kemeng-ssr':
         specifier: workspace:../core
         version: link:../core
-      '@kemengjs/utils':
+      '@kemengjs/ssr-utils':
         specifier: workspace:../utils
         version: link:../utils
       jotai:
