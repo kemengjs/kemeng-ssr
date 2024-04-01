@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@kemeng-ssr/core": "workspace:../core",
-    "@kemeng-ssr/utils": "workspace:../utils",
+    "@kemengjs/kemeng-ssr": "workspace:../core",
+    "@kemengjs/utils": "workspace:../utils",
     "jotai": "^2.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@kemeng-ssr/core",
+  "name": "@kemengjs/kemeng-ssr",
   "version": "0.0.1",
   "description": "",
   "main": "./dist/core.mjs",

@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@kemeng-ssr/core": "workspace:../core",
+    "@kemengjs/kemeng-ssr": "workspace:../core",
     "@types/mustache": "^4.2.5"
   },
   "dependencies": {

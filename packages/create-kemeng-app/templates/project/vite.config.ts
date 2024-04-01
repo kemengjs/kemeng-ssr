@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import url from 'node:url'
-import { appName, kemengSrrPlugin } from '@kemeng-ssr/core'
+import { appName, kemengSrrPlugin } from '@kemengjs/kemeng-ssr'
 
 const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
