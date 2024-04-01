@@ -1,5 +1,5 @@
 {
-  "name": "kemeng-h5",
+  "name": "{{appName}}",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",

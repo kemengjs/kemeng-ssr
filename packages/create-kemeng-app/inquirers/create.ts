@@ -1,10 +1,11 @@
 import { input } from '@inquirer/prompts'
-import { copySync, removeSync } from 'fs-extra/esm'
-import fs from 'node:fs'
+import { copySync } from 'fs-extra/esm'
+import fs, { mkdirSync } from 'node:fs'
 import path from 'node:path'
-
 import mustache from 'mustache'
-import { curAppResolve } from '@/packages/core'
+import { curAppResolve, resolve } from '../utils/utils'
+import { logger } from '../utils/log'
+import chalk from 'chalk'
 
 const inputBase = {
 	validate(value: string) {
@@ -66,19 +67,59 @@ export const createProject = async () => {
 
 	console.log('firstAppName:', firstAppName)
 
-	if (fs.existsSync(curAppResolve(projectName))) {
+	const projectPath = curAppResolve(projectName)
+
+	console.log(fs.existsSync(projectPath))
+
+	if (fs.existsSync(projectPath)) {
+		logger.error('文件已存在')
+
+		process.exit(1)
 	}
+
+	const data = {
+		projectName
+	}
+
+	mkdirSync(projectPath)
+
+	copyAndRender(resolve('./templates/project'), projectPath, data)
+
+	const appPath = curAppResolve(`${projectName}/apps/${firstAppName}`)
+	mkdirSync(appPath)
+
+	logger.log(chalk.green('项目创建成功！！！'))
+
+	copyAndRender(resolve('./templates/app'), appPath, {
+		appName: firstAppName
+	})
+	logger.log(chalk.green('app创建成功！！！'))
+	logger.log(chalk.green('请执行: '))
+	logger.log(chalk.green(`cd ./${projectName}`))
+	logger.log(chalk.green(`pnpm -F ./apps/${firstAppName} dev`))
 }
 
 export const createApp = async () => {
 	const appName = (
 		await input({
-			message: 'first app name: ',
+			message: 'app name: ',
 			...inputBase
 		})
 	).trim()
 
-	console.log('firstAppName:', appName)
+	console.log('app:', appName)
+
+	const appPath = curAppResolve(`./apps/${appName}`)
+	if (fs.existsSync(appPath)) {
+		logger.error('app已存在 请不要重复创建')
+
+		process.exit(1)
+	}
+
+	mkdirSync(appPath)
+	copyAndRender(resolve('./templates/app'), appPath, {
+		appName: appName
+	})
 }
 
 createProject()

@@ -1,5 +1,5 @@
 {
-  "name": "kemeng-app",
+  "name": "{{projectName}}",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",

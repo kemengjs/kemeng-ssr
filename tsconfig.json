@@ -37,5 +37,6 @@
     "**/*.tsx",
     "*.d.ts"
 , "server/utils.js", "server/server.js"],
+  "exclude": ["packages/create-kemeng-app/templates"]
   // "references": [{ "path": "./tsconfig.node.json" }]
 }

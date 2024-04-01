@@ -31,6 +31,7 @@
     "apps",
     "**/*.ts",
     "**/*.tsx",
-    "*.d.ts"
-, "server/*","zan"  ]
+    "*.d.ts",
+    "server/*"
+  ]
 }
