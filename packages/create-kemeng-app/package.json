@@ -1,5 +1,5 @@
 {
-  "name": "create-kemeng-app",
+  "name": "@kemengjs/create-kemeng-app",
   "version": "0.0.1",
   "description": "create kemeng-ssr",
   "main": "./dist/create-kemeng-app.mjs",
