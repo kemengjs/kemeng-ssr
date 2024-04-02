@@ -35,8 +35,6 @@ export const getAllPagesRoutes = (directoryPath: string, pageEnd: string) => {
 	const getPages = (dir: string) => {
 		const files = fs.readdirSync(dir)
 
-		console.log('files', files)
-
 		files.forEach(file => {
 			const filePath = path.join(dir, file)
 			const stats = fs.statSync(filePath)

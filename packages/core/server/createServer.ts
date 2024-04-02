@@ -18,6 +18,8 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 		configFile: workspaceResolve('./vite.config.ts')
 	})
 
+	let template = fs.readFileSync(curAppResolve('index.html'), 'utf8')
+
 	app.use(koaConnect(vite.middlewares))
 
 	app.use(async ctx => {
@@ -30,7 +32,6 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 				path: ctx.originalUrl.match(/[^?]+/)[0]
 			}
 
-			let template = fs.readFileSync(curAppResolve('index.html'), 'utf8')
 			template = await vite.transformIndexHtml(originalUrl, template)
 
 			const entryModule = await vite.ssrLoadModule(
@@ -98,8 +99,6 @@ const handleProdApp = async (
 			const curApp = originalUrl.match(/\/([^/]*)\/?/)?.[1]
 			const routeItem = routesMap[curApp]
 			const accept = ctx.request.headers.accept || ''
-
-			console.log('curApp', curApp, routeItem)
 
 			if (!accept.includes('text/html') || !curApp || !routeItem) {
 				await next()

@@ -31,8 +31,6 @@ export const serverStart: () => Plugin = () => {
 		name: 'kemeng-ssr:serverStart',
 		buildStart: {
 			handler(options) {
-				console.log('options.input', options.input)
-
 				// 规避dev服务触发
 				if (!options.input) {
 					return

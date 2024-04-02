@@ -84,8 +84,6 @@ export const getEntryRoutes: () => Plugin[] = () => {
 						const pageDir = workspaceResolve(`./apps/${appName}/pages`)
 
 						const { routesArr } = getAllPagesRoutes(pageDir, pageTsxEnd)
-						console.log('routesArr', routesArr)
-						console.log('options.ssr', options?.ssr)
 
 						let codeTemp = ''
 
@@ -105,8 +103,6 @@ export const getEntryRoutes: () => Plugin[] = () => {
 								getReactRoutesRender(routesArr, options?.ssr)
 							)
 						}
-
-						console.log('code', codeTemp)
 
 						return codeTemp
 					}

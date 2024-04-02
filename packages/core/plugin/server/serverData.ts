@@ -145,8 +145,6 @@ export const getServerData: (
 
 						const code = `${getVirtualServerDataRender(pagesServerDataInfo, isHasMainGetServerData)}`
 
-						console.log('zxc', code)
-
 						return code
 					}
 				}
