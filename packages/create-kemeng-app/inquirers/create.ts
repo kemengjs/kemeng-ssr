@@ -82,8 +82,6 @@ export const createProject = async () => {
 
 	const projectPath = curAppResolve(projectName)
 
-	console.log(fs.existsSync(projectPath))
-
 	if (fs.existsSync(projectPath)) {
 		logger.error('文件已存在')
 
@@ -91,7 +89,6 @@ export const createProject = async () => {
 	}
 
 	const { ssrCoreVersion, ssrUtilsVersion } = getKemengSsrVersion()
-	console.log('ssrCoreVersion', ssrCoreVersion, ssrUtilsVersion)
 
 	const data = {
 		projectName,
@@ -104,7 +101,9 @@ export const createProject = async () => {
 	copyAndRender(resolve('./templates/project'), projectPath, data)
 
 	const appPath = curAppResolve(`${projectName}/apps/${firstAppName}`)
-	mkdirSync(appPath)
+	mkdirSync(appPath, {
+		recursive: true
+	})
 
 	logger.log(chalk.green('项目创建成功！！！'))
 
