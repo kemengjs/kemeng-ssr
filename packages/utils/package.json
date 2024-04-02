@@ -1,12 +1,12 @@
 {
   "name": "@kemengjs/ssr-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "kemeng ssr 工具包",
-  "main": "./dist/utils.cjs",
-  "module": "./dist/utils.mjs",
+  "main": "./dist/ssr-utils.cjs",
+  "module": "./dist/ssr-utils.mjs",
   "exports": {
-    "import": "./dist/utils.mjs",
-    "require": "./dist/utils.cjs"
+    "import": "./dist/ssr-utils.mjs",
+    "require": "./dist/ssr-utils.cjs"
   },
   "files": [
     "src/*",
