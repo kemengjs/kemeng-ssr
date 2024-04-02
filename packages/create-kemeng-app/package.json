@@ -1,6 +1,6 @@
 {
   "name": "create-kemeng-app",
-  "version": "0.0.1-beta.3",
+  "version": "0.0.2",
   "description": "create kemeng-ssr",
   "main": "./dist/create-kemeng-app.mjs",
   "files": [

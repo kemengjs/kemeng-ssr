@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ssr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "企业级 大仓架构 ssr",
   "main": "./dist/core.cjs",
   "module": "./dist/core.mjs",
