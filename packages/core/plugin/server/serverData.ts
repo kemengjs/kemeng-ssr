@@ -17,6 +17,15 @@ import {
 	workspaceResolve
 } from '../../utils/utils'
 
+async function readAndReturnEmptyValue(filePath: string) {
+	try {
+		const data = await readFile(filePath, 'utf8')
+		return data
+	} catch (error) {
+		return '' // 返回空值
+	}
+}
+
 const getVirtualServerDataRender = (
 	pagesServerDataInfo: (RoutesItem & {
 		isHasServerData: boolean
@@ -101,12 +110,13 @@ export const getServerData: (
 							const serverRoutesItem = serverRoutesMap[item.name]
 
 							return serverRoutesItem
-								? readFile(serverRoutesItem.componentPath, 'utf8')
+								? readAndReturnEmptyValue(serverRoutesItem.componentPath)
 								: Promise.resolve('')
 						})
 
-						const mainContentPromise = readFile(mainServerFilePath, 'utf8')
-						const appContentPromise = readFile(appServerFilePath, 'utf8')
+						const mainContentPromise =
+							readAndReturnEmptyValue(mainServerFilePath)
+						const appContentPromise = readAndReturnEmptyValue(appServerFilePath)
 
 						const [mainContent, appContent, ...serverContents] =
 							await Promise.all([
