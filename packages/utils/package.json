@@ -1,17 +1,28 @@
 {
   "name": "@kemengjs/ssr-utils",
   "version": "0.0.1",
-  "description": "",
-  "main": "./dist/utils.js",
+  "description": "kemeng ssr 工具包",
+  "main": "./dist/utils.cjs",
+  "module": "./dist/utils.mjs",
   "exports": {
-    "import": "./dist/utils.js"
+    "import": "./dist/utils.mjs",
+    "require": "./dist/utils.cjs"
   },
-  
+  "files": [
+    "src/*",
+    "dist/*",
+    "./index.ts"
+  ],
   "scripts": {
-    "dev": "rollup --config ../../rollup.config.js --watch"
+    "dev": "rollup --config ../../rollup.config.js --watch",
+    "build": "rollup --config ../../rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemengjs/kemeng-ssr.git"
   },
   "keywords": [],
   "type": "module",
-  "author": "",
+  "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC"
 }

@@ -1,18 +1,32 @@
 {
   "name": "@kemengjs/kemeng-ssr",
   "version": "0.0.1",
-  "description": "",
-  "main": "./dist/core.mjs",
+  "description": "企业级 大仓架构 ssr",
+  "main": "./dist/core.cjs",
+  "module": "./dist/core.mjs",
   "exports": {
     "import": "./dist/core.mjs",
     "require": "./dist/core.cjs"
   },
+  "files": [
+    "plugin/*",
+    "server/*",
+    "dist/*",
+    "types/*",
+    "utils/*",
+    "./index.ts"
+  ],
   "scripts": {
-    "dev": "rollup --config ../../rollup.config.js --watch"
+    "dev": "rollup --config ../../rollup.config.js --watch",
+    "build": "rollup --config ../../rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemengjs/kemeng-ssr.git"
   },
   "keywords": [],
   "type": "module",
-  "author": "",
+  "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.10",

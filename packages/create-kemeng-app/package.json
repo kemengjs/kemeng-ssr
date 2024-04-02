@@ -2,13 +2,28 @@
   "name": "create-kemeng-app",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/create-kemeng-app.mjs",
+  "files": [
+    "index.ts",
+    "dist/*",
+    "inquirers/*",
+    "templates/*",
+    "utils/*"
+  ],
+  "bin": {
+    "create-kemeng-app": "./dist/create-kemeng-app.mjs"
+  },
   "scripts": {
     "dev": "rollup --config ../../rollup.config.js --watch",
-    "go": "node ./dist/create-kemeng-app.mjs"
+    "go": "node ./dist/create-kemeng-app.mjs",
+    "build": "rollup --config ../../rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemengjs/kemeng-ssr.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC",
   "devDependencies": {
     "@kemengjs/kemeng-ssr": "workspace:../core",

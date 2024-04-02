@@ -8,7 +8,7 @@
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC",
   "dependencies": {
     "@kemengjs/kemeng-ssr": "workspace:../core",
