@@ -48,6 +48,19 @@ function copyAndRender(
 	})
 }
 
+const getKemengSsrVersion = () => {
+	const packageJson = JSON.parse(
+		fs.readFileSync(resolve('./package.json'), 'utf8')
+	)
+
+	const ssrCoreVersion = packageJson.devDependencies['@kemengjs/kemeng-ssr']
+	const ssrUtilsVersion = packageJson.devDependencies['@kemengjs/ssr-utils']
+	return {
+		ssrCoreVersion,
+		ssrUtilsVersion
+	}
+}
+
 export const createProject = async () => {
 	const projectName = (
 		await input({
@@ -77,8 +90,13 @@ export const createProject = async () => {
 		process.exit(1)
 	}
 
+	const { ssrCoreVersion, ssrUtilsVersion } = getKemengSsrVersion()
+	console.log('ssrCoreVersion', ssrCoreVersion, ssrUtilsVersion)
+
 	const data = {
-		projectName
+		projectName,
+		ssrCoreVersion,
+		ssrUtilsVersion
 	}
 
 	mkdirSync(projectPath)
@@ -121,5 +139,3 @@ export const createApp = async () => {
 		appName: appName
 	})
 }
-
-createProject()
