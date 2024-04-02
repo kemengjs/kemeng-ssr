@@ -30,6 +30,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.10",
+    "fs-extra": "^11.2.0",
     "koa": "^2.15.0",
     "koa-compress": "^5.1.1",
     "koa-connect": "^2.1.0",
