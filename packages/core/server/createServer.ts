@@ -21,9 +21,15 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 
 	app.use(koaConnect(vite.middlewares))
 
-	app.use(async ctx => {
+	app.use(async (ctx, next) => {
 		try {
 			const { headers, query, originalUrl } = ctx
+			const accept = ctx.request.headers.accept || ''
+
+			if (!accept.includes('text/html')) {
+				await next()
+				return
+			}
 			const renderContext = {
 				headers,
 				query,
