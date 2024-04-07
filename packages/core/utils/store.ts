@@ -1,0 +1,1 @@
+export const serverCssId = 'kemengSsrServerStyle'

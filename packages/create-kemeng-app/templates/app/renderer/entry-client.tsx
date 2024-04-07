@@ -8,3 +8,5 @@ hydrateRoot(
 	document.getElementById('app')!,
 	<Main>/* __routerPlaceholder__ */</Main>
 )
+
+/* __serverCssRemovePlaceholder__ */

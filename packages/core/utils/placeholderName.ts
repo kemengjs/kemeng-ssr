@@ -4,3 +4,6 @@ export const serverDataImportPlaceholderName =
 
 export const routerPlaceholderName = '/* __routerPlaceholder__ */'
 export const serverDataPlaceholderName = '/* __serverDataPlaceholder__ */'
+
+export const serverCssRemovePlaceholderName =
+	'/* __serverCssRemovePlaceholder__ */'

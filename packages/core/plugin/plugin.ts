@@ -6,6 +6,8 @@ import { serverStart } from './server/build'
 import { getClientAssets } from './client/assets'
 import { getFileChange } from './server/fileChange'
 import { getServerData } from './server/serverData'
+import { getServerStyle, getServerCss } from './server/css'
+import { removeServerCss } from './client/removeServerCss'
 
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
@@ -19,8 +21,12 @@ export const kemengSrrPlugin: (
 		...getEntryRoutes(),
 		...getClientChunk(option),
 		...getClientAssets(option),
+		...removeServerCss(option),
 		serverStart(),
 		...getFileChange(),
-		...getServerData(option)
+		...getServerData(option),
+		...getServerCss(option)
 	]
 }
+
+export { getServerStyle }

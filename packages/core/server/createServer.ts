@@ -19,6 +19,8 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 	})
 	let template = null
 
+	const getServerStyle = (await import('../plugin/plugin')).getServerStyle
+
 	app.use(koaConnect(vite.middlewares))
 
 	app.use(async (ctx, next) => {
@@ -62,6 +64,7 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 								JSON.stringify(serverData)
 							)}</script>`
 						)
+						.replace(`<!--css-html-->`, getServerStyle())
 						.replace(`<!--app-html-->`, appHtml)
 
 					// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
