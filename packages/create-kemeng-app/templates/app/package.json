@@ -7,7 +7,7 @@
     "dev": "node ../../server/prod.mjs",
     "server:prod": "cross-env NODE_ENV=production node ../../server/prod.mjs",
     "preview": "pnpm run build && pnpm run server:prod",
-    "build": "vite --config ../../vite.config.ts build"
+    "build": "vite --config ./vite.config.mts build"
   },
   "keywords": [],
   "author": "",

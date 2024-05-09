@@ -1,5 +1,5 @@
 import { Plugin, build } from 'vite'
-import { serverEntryFilePath, workspaceResolve } from '../../utils/utils'
+import { curAppResolve, serverEntryFilePath } from '../../utils/utils'
 
 // 切换为ssr入口模式
 export const getServerBuild: () => Plugin[] = () => {
@@ -38,7 +38,7 @@ export const serverStart: () => Plugin = () => {
 
 				if (options.input[0]?.indexOf('index.html') > 0) {
 					build({
-						configFile: workspaceResolve('./vite.config.ts'),
+						configFile: curAppResolve('./vite.config.mts'),
 						plugins: [getServerBuild()]
 					})
 				}

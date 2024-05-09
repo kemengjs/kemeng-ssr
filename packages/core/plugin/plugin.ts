@@ -11,6 +11,7 @@ import { removeServerCss } from './client/removeServerCss'
 
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
+	routePrefix?: string
 }
 
 export const kemengSrrPlugin: (
@@ -18,7 +19,7 @@ export const kemengSrrPlugin: (
 ) => Plugin[] = (option: { isServeAssets: true }) => {
 	return [
 		...getClientConfig(),
-		...getEntryRoutes(),
+		...getEntryRoutes(option),
 		...getClientChunk(option),
 		...getClientAssets(option),
 		...removeServerCss(option),

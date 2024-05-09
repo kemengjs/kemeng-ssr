@@ -12,10 +12,17 @@ import {
 	routerPlaceholderName
 } from '../../utils/placeholderName'
 import { RoutesArr, getAllPagesRoutes, pageTsxEnd } from '../../utils/plugin'
+import { kemengSrrPluginOption } from '../plugin'
 
-const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
+const getReactRoutesRender = (
+	routesArr: RoutesArr,
+	isSsr = false,
+	routePrefix = undefined
+) => {
+	const basename = `${routePrefix ? routePrefix : '/'}${appName}`
+
 	if (isSsr) {
-		return `<StaticRouter basename='/${appName}' location={_context.path}>
+		return `<StaticRouter basename='${basename}' location={_context.path}>
   <Routes>
   <Route path='/' Component={App} />
   ${routesArr
@@ -28,7 +35,7 @@ const getReactRoutesRender = (routesArr: RoutesArr, isSsr = false) => {
 `
 	}
 
-	return `<BrowserRouter basename='/${appName}'>
+	return `<BrowserRouter basename='${basename}'>
   <Routes>
   <Route path='/' Component={App} />
   ${routesArr
@@ -69,7 +76,9 @@ const getAppImport = () => {
 	return `import App from '../App'`
 }
 
-export const getEntryRoutes: () => Plugin[] = () => {
+export const getEntryRoutes: (
+	pluginOption: kemengSrrPluginOption
+) => Plugin[] = pluginOption => {
 	return [
 		{
 			name: 'kemeng-ssr:clientEntryRoutes',
@@ -98,9 +107,14 @@ export const getEntryRoutes: () => Plugin[] = () => {
 								routerImportPlaceholderName,
 								getReactRoutesImport(routesArr, options?.ssr)
 							)
+
 							codeTemp = codeTemp.replace(
 								routerPlaceholderName,
-								getReactRoutesRender(routesArr, options?.ssr)
+								getReactRoutesRender(
+									routesArr,
+									options?.ssr,
+									pluginOption.routePrefix
+								)
 							)
 						}
 

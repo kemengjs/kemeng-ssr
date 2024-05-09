@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import { curAppResolve, workspaceResolve } from '../utils/utils'
 import staticServe from 'koa-static'
 import { initRoutesMap, routesMap } from './increase'
+import { removeSlash } from '../utils/location'
 
 const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 	const vite = await (
@@ -15,7 +16,7 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 		root: curAppResolve('./'),
 		server: { middlewareMode: true },
 		appType: 'custom',
-		configFile: workspaceResolve('./vite.config.ts')
+		configFile: curAppResolve('./vite.config.mts')
 	})
 	let template = null
 
@@ -102,16 +103,32 @@ const handleProdApp = async (
 		)
 	}
 
+	const routePrefix = options.routePrefix
+	const routePrefixLength = routePrefix
+		? removeSlash(routePrefix).length + 1
+		: 0
+
+	const specialRoutesToApps = options.specialRoutesToApps
+
+	const getFirstSlashKey = (url: string) => {
+		return url.match(/\/([^/]*)\/?/)?.[1] || ''
+	}
+
 	app.use(async (ctx, next) => {
 		try {
 			const { headers, query, originalUrl } = ctx
-			const curApp = originalUrl.match(/\/([^/]*)\/?/)?.[1]
+			const firstKey = getFirstSlashKey(originalUrl)
+			const curApp =
+				specialRoutesToApps[firstKey] ||
+				getFirstSlashKey(
+					routePrefix ? originalUrl.slice(routePrefixLength) : originalUrl
+				)
+
 			const routeItem = routesMap[curApp]
 			const accept = ctx.request.headers.accept || ''
 
 			if (!accept.includes('text/html') || !curApp || !routeItem) {
-				await next()
-				return
+				return next()
 			}
 
 			const { template, render, getServerData } = routesMap[curApp]
@@ -153,15 +170,23 @@ const handleProdApp = async (
 
 export type CreateServerOptions = {
 	isServeAssets: boolean // 是否提供静态资源服务 如果有自己的静态服务可以关闭
+	routePrefix?: string
+	specialRoutesToApps?: Record<string, string> // 指定对应路由到App 注意 路由前后不要带斜杠 App需要是apps目录中的 改对象下的路径 不支持哪部多路由功能 适用单页面
 }
 
 export const createServer = async (
-	options: CreateServerOptions = { isServeAssets: true }
+	callback: (app: koa<koa.DefaultState, koa.DefaultContext>) => void,
+	options: CreateServerOptions = {
+		isServeAssets: true
+	},
+	endCallback?: (app: koa<koa.DefaultState, koa.DefaultContext>) => void
 ) => {
 	const asyncLocalStorage = new AsyncLocalStorage()
 	global._asyncLocalStorage = asyncLocalStorage
 	const isProduction = process.env.NODE_ENV === 'production'
 	const app = new koa()
+
+	callback(app)
 
 	app.use(compress())
 
@@ -169,6 +194,10 @@ export const createServer = async (
 		await handleProdApp(app, options)
 	} else {
 		await handleDevApp(app)
+	}
+
+	if (endCallback) {
+		endCallback(app)
 	}
 
 	app.listen(3000, () => {
