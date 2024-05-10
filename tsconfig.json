@@ -35,6 +35,7 @@
     "packages/*",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.mts",
     "*.d.ts"
 , "server/utils.js", "server/server.js"],
   "exclude": ["packages/create-kemeng-app/templates"]

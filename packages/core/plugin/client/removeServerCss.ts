@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 import { kemengSrrPluginOption } from '../plugin'
 import { clientEntryFilePath } from '../../utils/utils'
 import { serverCssRemovePlaceholderName } from '../../utils/placeholderName'
@@ -6,7 +6,7 @@ import { serverCssId } from '../../utils/store'
 
 export const removeServerCss: (
 	option: kemengSrrPluginOption
-) => Plugin[] = () => {
+) => PluginOption[] = () => {
 	const getGetRemoveServerRender = () => {
 		return `document.querySelector("#${serverCssId}")?.remove()`
 	}

@@ -1,11 +1,11 @@
-import { Plugin, ViteDevServer } from 'vite'
+import { PluginOption, ViteDevServer } from 'vite'
 import {
 	getServerDataName,
 	pageTsxEnd,
 	serverDataTsEnd
 } from '../../utils/plugin'
 
-export const getFileChange: () => Plugin[] = () => {
+export const getFileChange: () => PluginOption[] = () => {
 	let _server: ViteDevServer = undefined
 
 	return [

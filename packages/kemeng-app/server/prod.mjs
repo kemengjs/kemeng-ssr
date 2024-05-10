@@ -4,7 +4,10 @@ createServer(
 	() => {},
 	{
 		isServeAssets: true,
-		routePrefix: '/v/'
+		routePrefix: '/v/',
+		specialRoutesToApps: {
+			'h5-pp': 'h5-pp'
+		}
 	},
 	app => {
 		app.use(async (ctx, next) => {

@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { Plugin, PluginOption } from 'vite'
 import { getClientConfig } from './client/config'
 import { getEntryRoutes } from './client/router'
 import { getClientChunk } from './client/chunk'
@@ -8,6 +8,7 @@ import { getFileChange } from './server/fileChange'
 import { getServerData } from './server/serverData'
 import { getServerStyle, getServerCss } from './server/css'
 import { removeServerCss } from './client/removeServerCss'
+import { getServerExternal } from './server/external'
 
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
@@ -16,7 +17,7 @@ export type kemengSrrPluginOption = {
 
 export const kemengSrrPlugin: (
 	option?: kemengSrrPluginOption
-) => Plugin[] = (option: { isServeAssets: true }) => {
+) => PluginOption[] = (option: { isServeAssets: true }) => {
 	return [
 		...getClientConfig(),
 		...getEntryRoutes(option),
@@ -24,6 +25,7 @@ export const kemengSrrPlugin: (
 		...getClientAssets(option),
 		...removeServerCss(option),
 		serverStart(),
+		...getServerExternal(),
 		...getFileChange(),
 		...getServerData(option),
 		...getServerCss(option)

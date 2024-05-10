@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 import { kemengSrrPluginOption } from '../plugin'
 import { appName, curAppResolve, workspaceResolve } from '../../utils/utils'
 import { copySync, removeSync } from 'fs-extra/esm'
@@ -7,7 +7,7 @@ import { removeSlash } from '../../utils/location'
 
 export const getClientAssets: (
 	option: kemengSrrPluginOption
-) => Plugin[] = option => {
+) => PluginOption[] = option => {
 	let isSsr = false
 
 	return [

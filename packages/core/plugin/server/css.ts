@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 import { kemengSrrPluginOption } from '../plugin'
 import { safeJsonParse } from '../../utils/json'
 import { serverCssId } from '../../utils/store'
@@ -14,7 +14,9 @@ export const getServerStyle = () => {
 	return `<style type="text/css" id="${serverCssId}" >${cssHtml}</style>`
 }
 
-export const getServerCss: (option: kemengSrrPluginOption) => Plugin[] = () => {
+export const getServerCss: (
+	option: kemengSrrPluginOption
+) => PluginOption[] = () => {
 	return [
 		{
 			name: 'kemeng-ssr:serverCss',

@@ -1,6 +1,6 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 
-export const getClientConfig: () => Plugin[] = () => {
+export const getClientConfig: () => PluginOption[] = () => {
 	return [
 		{
 			name: 'kemeng-ssr:clientBuild',

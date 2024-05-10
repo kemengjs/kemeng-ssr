@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "server": "cross-env NODE_ENV=production node ./server/prod.mjs"
   },
   "type": "module",
   "keywords": [],

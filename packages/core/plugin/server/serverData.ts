@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 import { kemengSrrPluginOption } from '../plugin'
 import {
 	RoutesItem,
@@ -63,7 +63,7 @@ const getVirtualServerDataRender = (
 
 export const getServerData: (
 	option: kemengSrrPluginOption
-) => Plugin[] = () => {
+) => PluginOption[] = () => {
 	const resolvedVirtualModuleId = '\0' + serverDataVirtualName
 
 	return [

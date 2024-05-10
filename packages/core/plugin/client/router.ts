@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { PluginOption } from 'vite'
 import {
 	appName,
 	clientEntryFilePath,
@@ -78,7 +78,7 @@ const getAppImport = () => {
 
 export const getEntryRoutes: (
 	pluginOption: kemengSrrPluginOption
-) => Plugin[] = pluginOption => {
+) => PluginOption[] = pluginOption => {
 	return [
 		{
 			name: 'kemeng-ssr:clientEntryRoutes',

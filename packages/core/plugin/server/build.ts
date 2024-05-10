@@ -1,8 +1,8 @@
-import { Plugin, build } from 'vite'
+import { PluginOption, build } from 'vite'
 import { curAppResolve, serverEntryFilePath } from '../../utils/utils'
 
 // 切换为ssr入口模式
-export const getServerBuild: () => Plugin[] = () => {
+export const getServerBuild: () => PluginOption = () => {
 	return [
 		{
 			name: 'kemeng-ssr:config:ssr',
@@ -26,7 +26,7 @@ export const getServerBuild: () => Plugin[] = () => {
 }
 
 // 触发server入口构建
-export const serverStart: () => Plugin = () => {
+export const serverStart: () => PluginOption = () => {
 	return {
 		name: 'kemeng-ssr:serverStart',
 		buildStart: {
