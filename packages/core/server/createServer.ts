@@ -186,7 +186,7 @@ export const createServer = async (
 	const isProduction = process.env.NODE_ENV === 'production'
 	const app = new koa()
 
-	callback(app)
+	await callback(app)
 
 	app.use(compress())
 
@@ -197,7 +197,7 @@ export const createServer = async (
 	}
 
 	if (endCallback) {
-		endCallback(app)
+		await endCallback(app)
 	}
 
 	app.listen(3000, () => {

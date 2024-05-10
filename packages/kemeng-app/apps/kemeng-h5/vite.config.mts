@@ -11,7 +11,7 @@ const baseSource = path.resolve(
 // https://vitejs.dev/config/
 export default defineConfig(() => {
 	return {
-		base: `/v/${appName}/`,
+		base: `/${appName}/`,
 		resolve: {
 			alias: {
 				'@': baseSource //基础@请误移除
@@ -25,8 +25,7 @@ export default defineConfig(() => {
 		plugins: [
 			react(),
 			kemengSrrPlugin({
-				isServeAssets: true,
-				routePrefix: '/v/'
+				isServeAssets: true
 			})
 		]
 	}
