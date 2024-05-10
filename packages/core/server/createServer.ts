@@ -107,8 +107,9 @@ const handleProdApp = async (
 	const routePrefixLength = routePrefix
 		? removeSlash(routePrefix).length + 1
 		: 0
+	const routePrefixContent = removeSlash(options.routePrefix)
 
-	const specialRoutesToApps = options.specialRoutesToApps
+	const specialRoutesToApps = options.specialRoutesToApps || {}
 
 	const getFirstSlashKey = (url: string) => {
 		return url.match(/\/([^/]*)\/?/)?.[1] || ''
@@ -117,13 +118,12 @@ const handleProdApp = async (
 	app.use(async (ctx, next) => {
 		try {
 			const { headers, query, originalUrl } = ctx
+
 			const firstKey = getFirstSlashKey(originalUrl)
 			const curApp =
-				specialRoutesToApps[firstKey] ||
-				getFirstSlashKey(
-					routePrefix ? originalUrl.slice(routePrefixLength) : originalUrl
-				)
-
+				routePrefixContent === firstKey
+					? getFirstSlashKey(originalUrl.slice(routePrefixLength))
+					: specialRoutesToApps[firstKey] || (!routePrefix && firstKey)
 			const routeItem = routesMap[curApp]
 			const accept = ctx.request.headers.accept || ''
 

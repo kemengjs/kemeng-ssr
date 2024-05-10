@@ -1,4 +1,4 @@
-export function removeSlash(str: string) {
+export function removeSlash(str: string = '') {
 	// 移除开头的斜杠
 	str = str.replace(/^\/+/, '')
 
