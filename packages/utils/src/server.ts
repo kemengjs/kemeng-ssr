@@ -57,3 +57,18 @@ export const getQuerys = <
 export const getCookies = () => {
 	return getContexts()?.cookies
 }
+
+export const getCookieByName = (name: string) => {
+	let cookie = ''.concat(getCookies())
+	let indexStart = cookie.indexOf(''.concat(name, '='))
+	if (indexStart === -1) {
+		return ''
+	}
+	let indexEnd = cookie.indexOf(';', indexStart)
+	if (indexEnd === -1) {
+		indexEnd = cookie.length
+	}
+	return decodeURIComponent(
+		cookie.substring(indexStart + name.length + 1, indexEnd)
+	)
+}
