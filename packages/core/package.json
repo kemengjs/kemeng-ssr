@@ -1,12 +1,15 @@
 {
   "name": "@kemengjs/kemeng-ssr",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "企业级 大仓架构 ssr",
   "main": "./dist/kemeng-ssr.cjs",
   "module": "./dist/kemeng-ssr.mjs",
+  "types": "./dist/types/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "exports": {
     "import": "./dist/kemeng-ssr.mjs",
-    "require": "./dist/kemeng-ssr.cjs"
+    "require": "./dist/kemeng-ssr.cjs",
+    "types": "./dist/types/index.d.ts"
   },
   "files": [
     "plugin/*",

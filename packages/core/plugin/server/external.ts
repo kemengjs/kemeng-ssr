@@ -14,7 +14,6 @@ export const getServerExternal: () => PluginOption[] = () => {
 							external: [
 								'react/jsx-runtime',
 								'react-dom/server',
-								'jotai',
 								'react-router-dom/server.mjs',
 								'react-router-dom',
 								'react'

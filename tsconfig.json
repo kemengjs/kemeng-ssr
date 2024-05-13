@@ -6,7 +6,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports":true,
-    "composite": true,
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
@@ -38,6 +37,6 @@
     "**/*.mts",
     "*.d.ts"
 , "server/utils.js", "server/server.js"],
-  "exclude": ["packages/create-kemeng-app/templates"]
+  "exclude": ["packages/create-kemeng-app/templates","**/dist"]
   // "references": [{ "path": "./tsconfig.node.json" }]
 }

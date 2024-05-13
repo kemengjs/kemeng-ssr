@@ -54,29 +54,28 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 			const jieTime = dayjs()
 			console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
 
-			global._asyncLocalStorage.run(
-				{ context: renderContext, serverData },
-				async () => {
-					const appHtml = render(renderContext)
-					const html = template
-						.replace(
-							'<!-- SERVER_DATA -->',
-							`<script>window.__SERVER_DATA__=${JSON.stringify(
-								JSON.stringify(serverData)
-							)}</script>`
-						)
-						.replace(`<!--css-html-->`, getServerStyle())
-						.replace(`<!--app-html-->`, appHtml)
+			const _store = { context: renderContext, serverData }
 
-					// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
-					const xuanTime = dayjs()
-					console.log('渲染结束', xuanTime.format(), xuanTime.diff(jieTime))
+			global._asyncLocalStorage.run(_store, async () => {
+				const appHtml = render(renderContext)
+				const html = template
+					.replace(
+						'<!-- SERVER_STORE -->',
+						`<script>window.__SERVER_STORE__=${JSON.stringify(
+							JSON.stringify(_store)
+						)}</script>`
+					)
+					.replace(`<!--css-html-->`, getServerStyle())
+					.replace(`<!--app-html-->`, appHtml)
 
-					ctx.status = 200
-					ctx.type = 'html'
-					ctx.body = html
-				}
-			)
+				// if(res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
+				const xuanTime = dayjs()
+				console.log('渲染结束', xuanTime.format(), xuanTime.diff(jieTime))
+
+				ctx.status = 200
+				ctx.type = 'html'
+				ctx.body = html
+			})
 		} catch (error) {
 			vite.ssrFixStacktrace(error)
 			console.log('error', error)
@@ -141,25 +140,23 @@ const handleProdApp = async (
 			}
 
 			const serverData = await getServerData(renderContext)
+			const _store = { context: renderContext, serverData }
 
-			await global._asyncLocalStorage.run(
-				{ context: renderContext, serverData },
-				async () => {
-					const appHtml = render(renderContext)
-					const html = template
-						.replace(
-							'<!-- SERVER_DATA -->',
-							`<script>window.__SERVER_DATA__=${JSON.stringify(
-								JSON.stringify(serverData)
-							)}</script>`
-						)
-						.replace(`<!--app-html-->`, appHtml)
+			await global._asyncLocalStorage.run(_store, async () => {
+				const appHtml = render(renderContext)
+				const html = template
+					.replace(
+						'<!-- SERVER_STORE -->',
+						`<script>window.__SERVER_STORE__=${JSON.stringify(
+							JSON.stringify(_store)
+						)}</script>`
+					)
+					.replace(`<!--app-html-->`, appHtml)
 
-					ctx.status = 200
-					ctx.type = 'html'
-					ctx.body = html
-				}
-			)
+				ctx.status = 200
+				ctx.type = 'html'
+				ctx.body = html
+			})
 		} catch (error) {
 			console.log(error)
 			ctx.status = 500
