@@ -2,7 +2,7 @@ import { IncomingHttpHeaders } from 'http'
 import { ParsedUrlQuery } from 'querystring'
 import { safeJsonParse } from '../src/json'
 
-export type ServerContent = {
+export type ServerContext = {
 	headers: IncomingHttpHeaders
 	query: ParsedUrlQuery
 	cookies: string
@@ -14,7 +14,7 @@ export const isServerCompile = (import.meta as any).env.SSR as boolean
 export const isServer = typeof window === 'undefined'
 
 export type LocalStore = {
-	context: ServerContent
+	context: ServerContext
 	serverData: any
 }
 
