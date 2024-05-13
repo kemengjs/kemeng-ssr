@@ -26,7 +26,7 @@ export const getLocalStore = () => {
 		return store
 	} else {
 		if (!SERVER_STORE) {
-			SERVER_STORE = safeJsonParse(window.__SERVER_STORE__, {
+			SERVER_STORE = safeJsonParse(window.__SERVER_STORE__ as string, {
 				context: {},
 				serverData: {}
 			})
