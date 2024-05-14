@@ -32,6 +32,7 @@
   "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC",
   "dependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
     "dayjs": "^1.11.10",
     "fs-extra": "^11.2.0",
     "koa": "^2.15.0",

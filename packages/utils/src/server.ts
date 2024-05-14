@@ -9,7 +9,7 @@ export type ServerContext = {
 	path: string
 }
 
-export const isServerCompile = (import.meta as any).env.SSR as boolean
+export const isServerCompile = __SSR_BUILD__
 
 export const isServer = typeof window === 'undefined'
 

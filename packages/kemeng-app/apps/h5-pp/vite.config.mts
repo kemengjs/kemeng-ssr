@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import url from 'node:url'
@@ -7,6 +7,10 @@ import { kemengSrrPlugin } from '@kemengjs/kemeng-ssr'
 const baseSource = path.resolve(
 	path.dirname(url.fileURLToPath(import.meta.url))
 )
+const resolve = (p: string) => path.resolve(baseSource, p)
+
+const workspaceRoot = searchForWorkspaceRoot(process.cwd())
+const workspaceResolve = (p: string) => path.resolve(workspaceRoot, p)
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -14,7 +18,7 @@ export default defineConfig(() => {
 		base: `/h5-pp/`,
 		resolve: {
 			alias: {
-				'@': baseSource //基础@请误移除
+				'@': workspaceRoot //基础@请误移除
 			}
 		},
 		build: {

@@ -1,7 +1,6 @@
-import { Plugin, PluginOption } from 'vite'
+import { PluginOption, splitVendorChunkPlugin } from 'vite'
 import { getClientConfig } from './client/config'
 import { getEntryRoutes } from './client/router'
-import { getClientChunk } from './client/chunk'
 import { serverStart } from './server/build'
 import { getClientAssets } from './client/assets'
 import { getFileChange } from './server/fileChange'
@@ -9,6 +8,7 @@ import { getServerData } from './server/serverData'
 import { getServerStyle, getServerCss } from './server/css'
 import { removeServerCss } from './client/removeServerCss'
 import { getServerExternal } from './server/external'
+import { getEnv } from './client/env'
 
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
@@ -20,8 +20,9 @@ export const kemengSrrPlugin: (
 ) => PluginOption[] = (option: { isServeAssets: true }) => {
 	return [
 		...getClientConfig(),
+		...getEnv(),
 		...getEntryRoutes(option),
-		...getClientChunk(option),
+		splitVendorChunkPlugin(),
 		...getClientAssets(option),
 		...removeServerCss(option),
 		serverStart(),
