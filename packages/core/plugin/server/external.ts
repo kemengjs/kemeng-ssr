@@ -5,7 +5,7 @@ export const getServerExternal: () => PluginOption[] = () => {
 	return [
 		{
 			name: 'kemeng-ssr:serverExternal',
-			// apply: 'build',
+			apply: 'build',
 			config: {
 				handler() {
 					return {

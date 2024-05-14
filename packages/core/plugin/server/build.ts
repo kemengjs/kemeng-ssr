@@ -41,7 +41,7 @@ export const serverStart: () => PluginOption = () => {
 				if (options.input[0]?.indexOf('index.html') > 0) {
 					build({
 						configFile: curAppResolve('./vite.config.mts'),
-						plugins: [nodeResolve(), commonjs(), getServerBuild()]
+						plugins: [commonjs(), getServerBuild()]
 					})
 				}
 			}

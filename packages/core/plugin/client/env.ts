@@ -8,7 +8,7 @@ export const getEnv: () => PluginOption[] = () => {
 				handler(_, option) {
 					return {
 						define: {
-							__SSR_BUILD__: JSON.stringify(option.isSsrBuild)
+							__SSR_BUILD__: JSON.stringify(option?.isSsrBuild || false)
 						}
 					}
 				}

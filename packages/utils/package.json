@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/ssr-utils",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "kemeng ssr 工具包",
   "main": "./dist/ssr-utils.cjs",
   "module": "./dist/ssr-utils.mjs",
