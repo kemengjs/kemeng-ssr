@@ -54,7 +54,7 @@ const getVirtualServerDataRender = (
 							? item.name
 							: ''
 
-			return `'${item.path}' :${funcRender},\n'${item.path}/' :${funcRender}${item.specialPath ? `'${item.specialPath}' :${funcRender},\n'${item.specialPath}/' :${funcRender}` : ''}`
+			return `'${item.path}' :${funcRender},\n'${item.path}/' :${funcRender}${item.specialPath ? `,\n'${item.specialPath}' :${funcRender},\n'${item.specialPath}/' :${funcRender}` : ''}`
 		})
 		.join(',\n')
 
