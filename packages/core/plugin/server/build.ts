@@ -1,7 +1,5 @@
 import { PluginOption, build } from 'vite'
 import { curAppResolve, serverEntryFilePath } from '../../utils/utils'
-import commonjs from '@rollup/plugin-commonjs'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 // 切换为ssr入口模式
 export const getServerBuild: () => PluginOption = () => {
@@ -20,7 +18,6 @@ export const getServerBuild: () => PluginOption = () => {
 			configResolved: {
 				handler(config) {
 					config.build.outDir = 'dist/server'
-					config.build.assetsDir = './'
 				}
 			}
 		}
@@ -41,7 +38,8 @@ export const serverStart: () => PluginOption = () => {
 				if (options.input[0]?.indexOf('index.html') > 0) {
 					build({
 						configFile: curAppResolve('./vite.config.mts'),
-						plugins: [commonjs(), getServerBuild()]
+						plugins: [getServerBuild()],
+						envFile: false
 					})
 				}
 			}

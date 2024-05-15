@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node ../../server/prod.mjs",
-    "server:prod": "cross-env NODE_ENV=production node ../../server/prod.mjs",
-    "preview": "pnpm run build && pnpm run server:prod",
+    "server": "cross-env NODE_ENV=production node ../../server/prod.mjs",
+    "preview": "pnpm run build && pnpm run server",
     "build": "vite --config ./vite.config.mts build"
   },
   "keywords": [],

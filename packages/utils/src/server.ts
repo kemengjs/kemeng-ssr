@@ -1,5 +1,5 @@
-import { IncomingHttpHeaders } from 'http'
-import { ParsedUrlQuery } from 'querystring'
+import { IncomingHttpHeaders } from 'node:http'
+import { ParsedUrlQuery } from 'node:querystring'
 import { safeJsonParse } from '../src/json'
 
 export type ServerContext = {
@@ -8,8 +8,6 @@ export type ServerContext = {
 	cookies: string
 	path: string
 }
-
-export const isServerCompile = __SSR_BUILD__
 
 export const isServer = typeof window === 'undefined'
 
@@ -21,7 +19,7 @@ export type LocalStore = {
 let SERVER_STORE: LocalStore = null
 
 export const getLocalStore = () => {
-	if (isServerCompile) {
+	if (isServer) {
 		const store: LocalStore = global._asyncLocalStorage.getStore()
 		return store
 	} else {

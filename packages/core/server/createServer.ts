@@ -35,9 +35,9 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 			}
 			const renderContext = {
 				headers,
-				query,
-				cookies: ctx.headers.cookie,
-				path: ctx.originalUrl.match(/[^?]+/)[0]
+				query: query || {},
+				cookies: headers.cookie,
+				path: originalUrl.match(/[^?]+/)[0]
 			}
 
 			template = fs.readFileSync(curAppResolve('index.html'), 'utf8')
@@ -50,13 +50,15 @@ const handleDevApp = async (app: koa<koa.DefaultState, koa.DefaultContext>) => {
 
 			const curTime = dayjs()
 			console.log('curTime', curTime.format())
-			const serverData = await getServerData(renderContext)
-			const jieTime = dayjs()
-			console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
 
-			const _store = { context: renderContext, serverData }
+			const _store = { context: renderContext, serverData: {} }
 
-			global._asyncLocalStorage.run(_store, async () => {
+			await global._asyncLocalStorage.run(_store, async () => {
+				const serverData = await getServerData(renderContext)
+				_store.serverData = serverData
+				const jieTime = dayjs()
+				console.log('预先请求结束', jieTime.format(), jieTime.diff(curTime))
+
 				const appHtml = render(renderContext)
 				const html = template
 					.replace(
@@ -87,7 +89,6 @@ const handleProdApp = async (
 	options: CreateServerOptions
 ) => {
 	await initRoutesMap()
-
 	const errorHtml = fs.readFileSync(
 		workspaceResolve(`./server/error.html`),
 		'utf8'
@@ -116,12 +117,12 @@ const handleProdApp = async (
 
 	app.use(async (ctx, next) => {
 		try {
-			const { headers, query, originalUrl } = ctx
+			const { headers, query, path } = ctx
 
-			const firstKey = getFirstSlashKey(originalUrl)
+			const firstKey = getFirstSlashKey(path)
 			const curApp =
 				routePrefixContent === firstKey
-					? getFirstSlashKey(originalUrl.slice(routePrefixLength))
+					? getFirstSlashKey(path.slice(routePrefixLength))
 					: specialRoutesToApps[firstKey] || (!routePrefix && firstKey)
 			const routeItem = routesMap[curApp]
 			const accept = ctx.request.headers.accept || ''
@@ -134,16 +135,19 @@ const handleProdApp = async (
 
 			const renderContext = {
 				headers,
-				query,
+				query: query || {},
 				cookies: ctx.headers.cookie,
-				path: originalUrl.match(/[^?]+/)[0]
+				path
 			}
 
-			const serverData = await getServerData(renderContext)
-			const _store = { context: renderContext, serverData }
+			const _store = { context: renderContext, serverData: {} }
 
 			await global._asyncLocalStorage.run(_store, async () => {
+				const serverData = await getServerData(renderContext)
+				_store.serverData = serverData
+
 				const appHtml = render(renderContext)
+
 				const html = template
 					.replace(
 						'<!-- SERVER_STORE -->',
@@ -152,7 +156,6 @@ const handleProdApp = async (
 						)}</script>`
 					)
 					.replace(`<!--app-html-->`, appHtml)
-
 				ctx.status = 200
 				ctx.type = 'html'
 				ctx.body = html
@@ -183,7 +186,7 @@ export const createServer = async (
 	const isProduction = process.env.NODE_ENV === 'production'
 	const app = new koa()
 
-	await callback(app)
+	callback(app)
 
 	app.use(compress())
 
@@ -194,7 +197,7 @@ export const createServer = async (
 	}
 
 	if (endCallback) {
-		await endCallback(app)
+		endCallback(app)
 	}
 
 	app.listen(3000, () => {
