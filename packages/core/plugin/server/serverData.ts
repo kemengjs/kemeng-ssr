@@ -139,7 +139,7 @@ export const getServerData: (
 								return {
 									isHasServerData,
 									...pagesRoute,
-									path: `${option.routePrefix ? `/${option.routePrefix}` : ''}/${appName}${pagesRoute.path}`.toLowerCase(),
+									path: `${option.routePrefix ? `${option.routePrefix}` : '/'}${appName}${pagesRoute.path}`.toLowerCase(),
 									specialPath:
 										option.specialRoutesToApps &&
 										option.specialRoutesToApps[appName]
@@ -154,7 +154,7 @@ export const getServerData: (
 						pagesServerDataInfo.unshift({
 							componentPath: appFilePath,
 							name: 'app',
-							path: `${option.routePrefix ? `/${option.routePrefix}` : ''}/${appName}`.toLowerCase(),
+							path: `${option.routePrefix ? `${option.routePrefix}` : '/'}${appName}`.toLowerCase(),
 							specialPath:
 								option.specialRoutesToApps &&
 								option.specialRoutesToApps[appName]
