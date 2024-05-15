@@ -15,6 +15,7 @@ import colors from 'picocolors'
 export type kemengSrrPluginOption = {
 	isServeAssets: boolean
 	routePrefix?: string
+	specialRoutesToApps?: Record<string, string>
 }
 
 export const kemengSrrPlugin: (

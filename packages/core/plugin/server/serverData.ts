@@ -30,6 +30,7 @@ const getVirtualServerDataRender = (
 	pagesServerDataInfo: (RoutesItem & {
 		isHasServerData: boolean
 		serverPath: string
+		specialPath: string
 	})[],
 	isHasMainGetServerData: boolean
 ) => {
@@ -53,7 +54,7 @@ const getVirtualServerDataRender = (
 							? item.name
 							: ''
 
-			return `'${item.path}' :${funcRender},\n'${item.path}/' :${funcRender}`
+			return `'${item.path}' :${funcRender},\n'${item.path}/' :${funcRender}${item.specialPath ? `'${item.specialPath}' :${funcRender},\n'${item.specialPath}/' :${funcRender}` : ''}`
 		})
 		.join(',\n')
 
@@ -63,7 +64,7 @@ const getVirtualServerDataRender = (
 
 export const getServerData: (
 	option: kemengSrrPluginOption
-) => PluginOption[] = () => {
+) => PluginOption[] = option => {
 	const resolvedVirtualModuleId = '\0' + serverDataVirtualName
 
 	return [
@@ -138,7 +139,12 @@ export const getServerData: (
 								return {
 									isHasServerData,
 									...pagesRoute,
-									path: `/${appName}${pagesRoute.path}`.toLowerCase(),
+									path: `${option.routePrefix ? `/${option.routePrefix}` : ''}/${appName}${pagesRoute.path}`.toLowerCase(),
+									specialPath:
+										option.specialRoutesToApps &&
+										option.specialRoutesToApps[appName]
+											? `/${appName}${pagesRoute.path}`.toLowerCase()
+											: '',
 									serverPath: serverRoutesMap[pagesRoute.name]?.componentPath
 								}
 							}
@@ -148,7 +154,12 @@ export const getServerData: (
 						pagesServerDataInfo.unshift({
 							componentPath: appFilePath,
 							name: 'app',
-							path: `/${appName}`.toLowerCase(),
+							path: `${option.routePrefix ? `/${option.routePrefix}` : ''}/${appName}`.toLowerCase(),
+							specialPath:
+								option.specialRoutesToApps &&
+								option.specialRoutesToApps[appName]
+									? `/${appName}`.toLowerCase()
+									: '',
 							isHasServerData: isHasAppGetServerData,
 							serverPath: appServerFilePath
 						})
