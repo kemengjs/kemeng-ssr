@@ -21,7 +21,7 @@ export const getClientAssets: (
 				}
 			},
 
-			closeBundle: {
+			writeBundle: {
 				handler() {
 					if (option.isServeAssets && !isSsr) {
 						const routePrefix = removeSlash(option.routePrefix || '')
