@@ -1,0 +1,27 @@
+syntax = "proto3";
+package ssrRender;
+
+message RenderReq {
+    string queryString = 1;
+    string appName = 2;
+    string path = 3;
+    string cookie = 4;
+    string ip = 5;
+    string ua = 6;
+    string params = 7;
+    string color = 8; //染色
+    string referer = 9;
+    string others = 15;
+}
+
+message RenderReply {
+    int32 status = 1;
+    string body = 2;
+    string redirect = 3;
+    string setcookie = 4;
+    string others = 5;
+}
+
+service RenderServer {
+    rpc render (RenderReq) returns  (RenderReply);
+}

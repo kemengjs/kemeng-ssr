@@ -32,6 +32,8 @@
   "author": "kemengwang <1148177968@qq.com>",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.11.1",
+    "@grpc/proto-loader": "^0.7.13",
     "@rollup/plugin-commonjs": "^25.0.7",
     "dayjs": "^1.11.10",
     "fs-extra": "^11.2.0",
