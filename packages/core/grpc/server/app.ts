@@ -45,7 +45,7 @@ class Application {
 			throw new Error('error package :' + e)
 		}
 	}
-	// 给每个函数加了个path字端
+	// 给每个函数加了个path字端 以及赋值总serves字端services
 	addService(servicesArg: Record<string, any>) {
 		const rpcMap = this.grpcObj[this.service].service
 		let services = { ...servicesArg }
